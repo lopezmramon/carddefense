@@ -1,0 +1,28 @@
+﻿public enum Theme
+{
+	Green,
+	GreenCheckered,
+	Earth,
+	EarthCheckered,
+	GroundMud,
+	GroundSnow,
+	Ice,
+	Lava,
+	Snow,
+	Stone01,
+	Stone02,
+	Stone03,
+	Stone04,
+	Stone05,
+	Stone06,
+	Stone07,
+	WallBrick01,
+	WallBrick02,
+	WallBrick03,
+	WallBrick04,
+	WallBrick05,
+	WallBrick06,
+	WallBrickStone,
+	WallStone,
+	Water
+}
