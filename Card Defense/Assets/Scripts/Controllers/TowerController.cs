@@ -8,6 +8,7 @@ public class TowerController : MonoBehaviour
 	public float fireRate, fireCountdown, fireRange;
 	public ProjectileController projectile;
 	public Transform projectileOrigin;
+	public List<Element> elements = new List<Element>();
 
 	private void Update()
 	{
@@ -38,7 +39,7 @@ public class TowerController : MonoBehaviour
 	{
 		ProjectileController projectileShot = Instantiate(projectile);
 		projectileShot.transform.position = projectileOrigin.position;
-		projectileShot.Initialize(target, 10f);
+		projectileShot.Initialize(target, elements);
 	}
 
 	internal void SimulateUpgrade(Element element)

@@ -5,21 +5,24 @@ using UnityEngine;
 public class ProjectileController : MonoBehaviour
 {
 	private ProjectileMover projectileMover;
+	public List<Element> elements = new List<Element>();
 	public float damage;
 
-	public void Initialize(Transform target, float speed)
+	public void Initialize(Transform target, List<Element> elements)
 	{
-		projectileMover = new ProjectileMover(transform, target, speed);		
+		this.elements = elements;
+		projectileMover = new ProjectileMover(transform, target, SpeedFromElements(), ElementUtility.MovementForElement(elements[0]));		
 	}
 
-	public void Initialize(Vector3 target, float speed)
+	public void Initialize(Vector3 target, List<Element> elements)
 	{
-		projectileMover = new ProjectileMover(transform, target, speed);		
+		this.elements = elements;	
+		projectileMover = new ProjectileMover(transform, target, SpeedFromElements(), ElementUtility.MovementForElement(elements[0]));		
 	}
 
 	private void Update()
 	{
-		projectileMover.MoveStraightToAssignedTarget((success) =>
+		projectileMover.MoveAsRequired((success) =>
 		{
 			if (success)
 			{
@@ -31,5 +34,10 @@ public class ProjectileController : MonoBehaviour
 				Destroy(gameObject);
 			}
 		});
+	}
+
+	private float SpeedFromElements()
+	{
+		return 10f;
 	}
 }
