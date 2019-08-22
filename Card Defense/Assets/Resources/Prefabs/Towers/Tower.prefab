@@ -67,6 +67,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -106,6 +107,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireRate: 2
   fireCountdown: 0
-  fireRange: 5
+  fireRange: 7
   projectile: {fileID: 5853366049775524617, guid: 6d9595045929af84c9535cd32eb47afa,
     type: 3}
+  projectileOrigin: {fileID: 0}
+  rotatingPart: {fileID: 0}
+  target: {fileID: 0}
+  elements: 00000000

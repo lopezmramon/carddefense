@@ -15,6 +15,7 @@ public class ParabolaDisplay : MonoBehaviour
 		startPos = transform.position;
 		initialXDistance = targetPos.x - startPos.x;
 	}
+
 	void Update()
 	{
 		if (!parable) return;
@@ -49,9 +50,20 @@ public class ParabolaDisplay : MonoBehaviour
 		}
 		else Destroy(gameObject);
 	}
+
 	private void OnMouseDown()
 	{
 		parable = true;
+	}
+
+	private void OnMouseEnter()
+	{
+		CodeControl.Message.Send(new DisplayParabolaRequestEvent(transform.position, targetPos, speed, arcHeight, 0.95f, numberOfBounces));
+	}
+
+	private void OnMouseExit()
+	{
+	//	CodeControl.Message.Send(new StopDisplayingParabolaRequestEvent());
 	}
 	/// 
 	/// This is a 2D version of Quaternion.LookAt; it returns a quaternion
@@ -59,7 +71,7 @@ public class ParabolaDisplay : MonoBehaviour
 	/// 
 	/// forward direction
 	/// Quaternion that rotates +X to align with forward
-	static Quaternion LookAt2D(Vector2 forward)
+	public static Quaternion LookAt2D(Vector2 forward)
 	{
 		return Quaternion.Euler(0, 0, Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg);
 	}

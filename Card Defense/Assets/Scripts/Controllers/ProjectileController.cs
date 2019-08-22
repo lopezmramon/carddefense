@@ -5,39 +5,73 @@ using UnityEngine;
 public class ProjectileController : MonoBehaviour
 {
 	private ProjectileMover projectileMover;
-	public List<Element> elements = new List<Element>();
-	public float damage;
+	public float damage, aoe;
+	private int reflectionsLeft;
+	private ProjectileMovementType primaryMovementType;
 
-	public void Initialize(Transform target, List<Element> elements)
+	public void InitializeStraightChainProjectile(Transform target, int chainLength, float speed, float aoe, ProjectileMovementType primaryMovementType)
 	{
-		this.elements = elements;
-		projectileMover = new ProjectileMover(transform, target, SpeedFromElements(), ElementUtility.MovementForElement(elements[0]));		
+		reflectionsLeft = chainLength;
+		this.aoe = aoe;
+		this.primaryMovementType = primaryMovementType;
+		projectileMover = new ProjectileMover(transform, target, speed);		
 	}
 
-	public void Initialize(Vector3 target, List<Element> elements)
+	public void InitializeBounceProjectile(Vector3 target, int bounces, float speed, float aoe, ProjectileMovementType primaryMovementType)
 	{
-		this.elements = elements;	
-		projectileMover = new ProjectileMover(transform, target, SpeedFromElements(), ElementUtility.MovementForElement(elements[0]));		
+		reflectionsLeft = bounces;
+		this.primaryMovementType = primaryMovementType;
+		this.aoe = aoe;
+		projectileMover = new ProjectileMover(transform, target, speed);		
 	}
 
 	private void Update()
 	{
-		projectileMover.MoveAsRequired((success) =>
+		if (projectileMover == null) return;
+		switch (primaryMovementType)
 		{
-			if (success)
-			{
-				projectileMover.target.GetComponent<EnemyController>().Damage(damage);
-				Destroy(gameObject);
-			}
-			else
-			{
-				Destroy(gameObject);
-			}
-		});
+			case ProjectileMovementType.StraightChain:
+				projectileMover.MoveStraightToAssignedTarget((success)=> 
+				{
+					if (success)
+					{
+						projectileMover.target.GetComponent<EnemyController>().Damage(damage);
+						Destroy(gameObject);
+					}
+					else
+					{
+						Destroy(gameObject);
+					}
+				}
+				);
+				break;
+			case ProjectileMovementType.BounceOnGround:
+				projectileMover.BounceOnTargetPosition((success)=> 
+				{
+					if (success)
+					{
+						AnalyzeBounceResult();
+					}
+					else
+					{
+						Destroy(gameObject);
+					}
+				});
+				break;
+		}
 	}
 
-	private float SpeedFromElements()
+	private void AnalyzeBounceResult()
 	{
-		return 10f;
+		reflectionsLeft--;
+		Collider[] hitEnemies = Physics.OverlapSphere(transform.position, aoe, LayerMask.NameToLayer("Enemy"));
+		foreach(Collider collider in hitEnemies)
+		{
+			if(collider.GetComponent<EnemyController>() != null)
+			{
+				collider.GetComponent<EnemyController>().Damage(damage);
+			}
+		}
+		if (reflectionsLeft <= 0) Destroy(gameObject);
 	}
 }

@@ -4,52 +4,65 @@ using UnityEngine;
 public class ProjectileMover 
 {
 	public Transform projectile, target;
-	private Vector3 targetLocation;
-	private float speed;
-	private ProjectileMovementType primaryMovementType;
-
-	public ProjectileMover(Transform projectile, Transform target, float speed, ProjectileMovementType primaryMovementType)
+	private Vector3 targetPos, startPos;
+	private float speed, initialXDistance;
+	
+	public ProjectileMover(Transform projectile, Transform target, float speed)
 	{
-		this.primaryMovementType = primaryMovementType;
 		this.projectile = projectile;
 		this.target = target;
+		startPos = projectile.position;
+		initialXDistance = targetPos.x - startPos.x;
 		this.speed = speed;
 	}
 
-	public ProjectileMover(Transform projectile, Vector3 targetLocation, float speed, ProjectileMovementType primaryMovementType)
+	public ProjectileMover(Transform projectile, Vector3 targetLocation, float speed)
 	{
-		this.primaryMovementType = primaryMovementType;
 		this.projectile = projectile;
-		this.targetLocation = targetLocation;
+		this.targetPos = targetLocation;
+		startPos = projectile.position;
+		initialXDistance = targetPos.x - startPos.x;
 		this.speed = speed;
 	}
 
-	public void MoveAsRequired(System.Action<bool> OnHit)
+	public void UpdateStartAndTargetPositionForNextBounce()
 	{
-		switch (primaryMovementType)
+		startPos = targetPos;
+		targetPos.x += initialXDistance;
+		targetPos.y = projectile.position.y;
+	}
+
+	public void BounceOnTargetPosition(Action<bool> onHit)
+	{
+		float x0 = startPos.x;
+		float x1 = targetPos.x;
+		float dist = x1 - x0;
+		float arcHeight = startPos.y + 1f;
+		float nextX = Mathf.MoveTowards(projectile.position.x, x1, speed * Time.deltaTime);
+		float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
+		float arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
+		Vector3 nextPos = new Vector3(nextX, baseY + arc, projectile.position.z);
+
+		// Rotate to face the next position, and then move there
+		projectile.rotation = LookAt2D(nextPos - projectile.position);
+		projectile.position = nextPos;
+
+		// Do something when we reach the target
+		if (nextPos == targetPos)
 		{
-			case ProjectileMovementType.StraightChain:
-				MoveStraightToAssignedTarget(OnHit);
-				break;
-			case ProjectileMovementType.BounceOnGround:
-				BounceOnTargetPosition(OnHit);
-				break;
+			UpdateStartAndTargetPositionForNextBounce();
+			onHit(true);
 		}
 	}
 
-	private void BounceOnTargetPosition(Action<bool> onHit)
-	{
-
-	}
-
-	public void MoveStraightToAssignedTarget(System.Action<bool> OnHit)
+	public void MoveStraightToAssignedTarget(Action<bool> OnHit)
 	{
 		if(target == null || !target.gameObject.activeInHierarchy)
 		{
 			OnHit(false);
 		}
 		Vector3 projectilePosition = projectile.position;
-		Vector3 targetPosition = target == null ? targetLocation : target.position;
+		Vector3 targetPosition = target == null ? targetPos : target.position;
 		Vector3 direction = targetPosition - projectilePosition;
 		float distanceToTravel = speed * Time.deltaTime;
 		if(direction.magnitude <= distanceToTravel)
@@ -60,7 +73,16 @@ public class ProjectileMover
 		{
 			projectile.Translate(direction.normalized * distanceToTravel);	
 		}
-	}	
+	}
 
-	
+	/// 
+	/// This is a 2D version of Quaternion.LookAt; it returns a quaternion
+	/// that makes the local +X axis point in the given forward direction.
+	/// 
+	/// forward direction
+	/// Quaternion that rotates +X to align with forward
+	public static Quaternion LookAt2D(Vector2 forward)
+	{
+		return Quaternion.Euler(0, 0, Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg);
+	}
 }

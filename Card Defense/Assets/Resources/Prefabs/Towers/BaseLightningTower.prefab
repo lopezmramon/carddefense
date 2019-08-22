@@ -46,9 +46,13 @@ MonoBehaviour:
   fireRate: 1
   fireCountdown: 1
   fireRange: 2
+  rotationSpeed: 0
   projectile: {fileID: 5853366049775524617, guid: 6d9595045929af84c9535cd32eb47afa,
     type: 3}
   projectileOrigin: {fileID: 66800443243325666}
+  rotatingPart: {fileID: 0}
+  target: {fileID: 0}
+  elements: 
 --- !u!1 &5400303016952971961
 GameObject:
   m_ObjectHideFlags: 0
@@ -9637,7 +9641,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireRate: 1
   fireCountdown: 1
-  fireRange: 10
+  fireRange: 5
+  rotationSpeed: 0
   projectile: {fileID: 5853366049775524617, guid: 6d9595045929af84c9535cd32eb47afa,
     type: 3}
   projectileOrigin: {fileID: 66800443243325666}
+  rotatingPart: {fileID: 5400303016953011867}
+  target: {fileID: 0}
+  elements: 05000000
