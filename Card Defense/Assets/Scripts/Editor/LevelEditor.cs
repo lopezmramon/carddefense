@@ -127,7 +127,7 @@ public class LevelEditor : EditorWindow
 	private void LivesResourcesAndThemeInput()
 	{
 		GUILayout.Label("Starting Lives: ", GUILayout.ExpandWidth(false));
-		livesInput = GUILayout.TextField(livesInput, 2, GUILayout.Width(50), GUILayout.Height(20));
+		livesInput = GUILayout.TextField(livesInput, 3, GUILayout.Width(60), GUILayout.Height(20));
 		if (!int.TryParse(livesInput, out lives))
 		{
 			livesInput = "";
@@ -135,7 +135,7 @@ public class LevelEditor : EditorWindow
 		level.lives = lives;
 		GUILayout.Space(20);
 		GUILayout.Label("Starting Resource: ", GUILayout.ExpandWidth(false));
-		startingResourceInput = GUILayout.TextField(startingResourceInput, 2, GUILayout.Width(50), GUILayout.Height(20));
+		startingResourceInput = GUILayout.TextField(startingResourceInput, 4, GUILayout.Width(70), GUILayout.Height(20));
 		if (!int.TryParse(startingResourceInput, out startingResource))
 		{
 			startingResourceInput = "";

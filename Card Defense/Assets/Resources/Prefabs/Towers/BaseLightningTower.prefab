@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2837392080449082807
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3786849347088882200}
+  m_Layer: 10
+  m_Name: ChargeRotationCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3786849347088882200
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2837392080449082807}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.57, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5400303016953011869}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2843392213505274293
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,8 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 66800443243325666}
-  - component: {fileID: 7697849757176509966}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ProjectileOrigin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,28 +60,6 @@ Transform:
   m_Father: {fileID: 5400303016953011869}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7697849757176509966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2843392213505274293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3379a9be2e6c8f4bbca60fd61793325, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fireRate: 1
-  fireCountdown: 1
-  fireRange: 2
-  rotationSpeed: 0
-  projectile: {fileID: 5853366049775524617, guid: 6d9595045929af84c9535cd32eb47afa,
-    type: 3}
-  projectileOrigin: {fileID: 66800443243325666}
-  rotatingPart: {fileID: 0}
-  target: {fileID: 0}
-  elements: 
 --- !u!1 &5400303016952971961
 GameObject:
   m_ObjectHideFlags: 0
@@ -64,7 +71,7 @@ GameObject:
   - component: {fileID: 5400303016953011865}
   - component: {fileID: 5400303016968215513}
   - component: {fileID: 5400303016968315513}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tesla_glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4781,7 +4788,7 @@ GameObject:
   - component: {fileID: 5400303016953011867}
   - component: {fileID: 5400303016968215515}
   - component: {fileID: 5400303016968315515}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tesla_part
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9557,7 +9564,9 @@ GameObject:
   - component: {fileID: 5400303016949587641}
   - component: {fileID: 5400303016950717561}
   - component: {fileID: 6350547172199609798}
-  m_Layer: 0
+  - component: {fileID: 8828889080811204506}
+  - component: {fileID: -7710201291870674928}
+  m_Layer: 10
   m_Name: BaseLightningTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9578,6 +9587,7 @@ Transform:
   - {fileID: 5400303016953011865}
   - {fileID: 5400303016953011867}
   - {fileID: 66800443243325666}
+  - {fileID: 3786849347088882200}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9643,9 +9653,49 @@ MonoBehaviour:
   fireCountdown: 1
   fireRange: 5
   rotationSpeed: 0
-  projectile: {fileID: 5853366049775524617, guid: 6d9595045929af84c9535cd32eb47afa,
-    type: 3}
+  buildTime: 3
+  lerpElapsedTime: 0
+  buildMaterials:
+  - {fileID: 2100000, guid: 73aff28c27a8c554e896ab5a43069a4c, type: 2}
+  - {fileID: 2100000, guid: 3934101bbeae4a346b5f7b2ed594830e, type: 2}
+  renderers:
+  - {fileID: 5400303016950717561}
   projectileOrigin: {fileID: 66800443243325666}
   rotatingPart: {fileID: 5400303016953011867}
   target: {fileID: 0}
-  elements: 05000000
+  chargeRotationCenter: {fileID: 3786849347088882200}
+  targetController: {fileID: 0}
+  targetControllerPrefab: {fileID: 1434821447739341955, guid: d5fbf28ac7538d14b87296ad818adb09,
+    type: 3}
+--- !u!95 &8828889080811204506
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5400303016952971965}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!65 &-7710201291870674928
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5400303016952971965}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2.102735, z: 1}
+  m_Center: {x: 0, y: 1.0513675, z: 0}

@@ -6,143 +6,381 @@ using UnityEngine.EventSystems;
 
 public class TowerController : MonoBehaviour, IPointerDownHandler
 {
-	public float fireRate, fireCountdown, fireRange, rotationSpeed = 10f;
-	public ProjectileController projectile;
-	public Transform projectileOrigin, rotatingPart, target;
-	public List<Element> elements = new List<Element>();
-	private ProjectileMovementType projectileMovementType;
+	private float progress;
+	public float fireRate, fireCountdown, fireRange, rotationSpeed = 10f, buildTime, lerpElapsedTime;
+	public Material[] buildMaterials;
+	private Material finalMaterial;
+	public Renderer[] renderers;
+	public Transform projectileOrigin, rotatingPart, target, chargeRotationCenter;
+	public TowerTargetController targetController;
+	public TowerTargetController targetControllerPrefab;
+	public Queue<Element> elements = new Queue<Element>();
+	private TowerTargeting towerTargeting;
 	private Animator animator;
+	private bool building = false;
+	private float fireRateMultiplier = 1f, rangeMultiplier = 1f, projectileDamageMultiplier = 1f, projectileAOEMultiplier = 1f;
+	public float fireRateMultiplierTimer, rangeMultiplierTimer, projectileDamageMultiplierTimer, projectileAOEMultiplierTimer;
+	private bool inWave;
 
 	private void Awake()
 	{
 		animator = GetComponent<Animator>();
+		CodeControl.Message.AddListener<WaveStartedEvent>(OnWaveStarted);
+		CodeControl.Message.AddListener<WaveFinishedEvent>(OnWaveFinished);
 	}
 
-	private void Start()
+	private void OnWaveFinished(WaveFinishedEvent obj)
 	{
-		projectileMovementType = ElementUtility.MovementForElement(elements[0]);
+		inWave = false;
+	}
+
+	private void OnWaveStarted(WaveStartedEvent obj)
+	{
+		inWave = true;
+	}
+
+	private void SetupTargeting()
+	{
+		towerTargeting = ElementUtility.TowerTargetingForBaseElement(elements.Peek());
+		if (towerTargeting == TowerTargeting.Ground) GenerateTargetObject();
+	}
+
+	private void GenerateTargetObject()
+	{
+		targetController = Instantiate(targetControllerPrefab);
+		Vector3 initialTargetPosition = projectileOrigin.transform.position;
+		initialTargetPosition.y = 0;
+		targetController.Initialize(initialTargetPosition, elements.ToArray());
+	}
+
+	public void DeactivateTarget()
+	{
+		if (targetController != null) targetController.Deactivate();
+	}
+
+	public void ActivateTarget()
+	{
+		if (targetController != null) targetController.Activate();
 	}
 
 	private void Update()
 	{
+		if (building)
+		{
+			Build();
+		}
+
 		if (target == null || Vector3.Distance(transform.position, target.position) > fireRange)
 		{
 			DetectEnemies();
 		}
-		if (target == null)
-		{
-			//ResetRotation();
-			return;
-		}
 		LookAtTarget();
+		Countdowns();		
+	}
+
+	private void Countdowns()
+	{
 		if (fireCountdown >= 0)
 		{
-			fireCountdown -= Time.deltaTime;
+			fireCountdown -= Time.deltaTime * GameManager.gameSpeedMultiplier;
 		}
 		else
 		{
-			fireCountdown = 1f / fireRate;
-			FireProjectileAtTarget(target);
+			fireCountdown = 1f / (fireRate * fireRateMultiplier);
+			FireProjectileAtTarget();
+		}
+		if (fireRateMultiplierTimer >= 0)
+		{
+			fireRateMultiplierTimer -= Time.deltaTime * GameManager.gameSpeedMultiplier;
+		}
+		else
+		{
+			PropertyReset(PropertyModifier.FireRate);
+		}
+		if (projectileDamageMultiplierTimer >= 0)
+		{
+			projectileDamageMultiplierTimer -= Time.deltaTime * GameManager.gameSpeedMultiplier;
+		}
+		else
+		{
+			PropertyReset(PropertyModifier.Damage);
+		}
+		if (projectileAOEMultiplierTimer >= 0)
+		{
+			projectileAOEMultiplierTimer -= Time.deltaTime * GameManager.gameSpeedMultiplier;
+		}
+		else
+		{
+			PropertyReset(PropertyModifier.AOE);
+		}
+		if (rangeMultiplierTimer >= 0)
+		{
+			rangeMultiplierTimer -= Time.deltaTime * GameManager.gameSpeedMultiplier;
+		}
+		else
+		{
+			PropertyReset(PropertyModifier.Range);
+		}
+	}
+
+	private void PropertyReset(PropertyModifier propertyModifier)
+	{
+		switch (propertyModifier)
+		{
+			case PropertyModifier.Damage:
+				projectileDamageMultiplier = 1;
+				break;
+			case PropertyModifier.FireRate:
+				fireRateMultiplier = 1;
+				break;
+			case PropertyModifier.AOE:
+				projectileAOEMultiplier = 1;
+				break;
+			case PropertyModifier.Range:
+				rangeMultiplier = 1;
+				break;
+		}
+	}
+
+	private void FireProjectileAtTarget()
+	{
+		if (building) return;
+		switch (towerTargeting)
+		{
+			case TowerTargeting.Direct:
+				if (target == null) return;
+				DispatchShootProjectileRequestEvent(target);
+				break;
+			case TowerTargeting.Ground:
+				DispatchShootProjectileRequestEvent(targetController.transform);
+				break;
+			case TowerTargeting.NoTarget:
+				DispatchShootProjectileRequestEvent(null);
+				break;
+		}
+		animator.SetTrigger("Shoot");
+	}
+
+	private void Build()
+	{
+		if (lerpElapsedTime < buildTime)
+		{
+			progress = Mathf.Lerp(-1f, 1f, lerpElapsedTime / buildTime);
+			foreach (Renderer renderer in renderers)
+			{
+				renderer.material.SetFloat("_EffectProgress", progress);
+				if (progress > 0.45f)
+				{
+					float edgeWidth = renderer.material.GetFloat("_EdgeWidth");
+					if (edgeWidth > 0) edgeWidth -= Time.deltaTime * GameManager.gameSpeedMultiplier;
+					renderer.material.SetFloat("_EdgeWidth", edgeWidth);
+				}
+			}
+			lerpElapsedTime += Time.deltaTime * GameManager.gameSpeedMultiplier;
+		}
+		else
+		{
+			foreach (Renderer renderer in renderers)
+			{
+				renderer.material = finalMaterial;
+			}
+			building = false;
 		}
 	}
 
 	private void ResetRotation()
 	{
 		Quaternion rotation = Quaternion.identity;
-		// rotation.x = 0; This is for limiting the rotation to the y axis. I needed this for my project so just
-		// rotation.z = 0;                 delete or add the lines you need to have it behave the way you want.
 		rotatingPart.rotation = Quaternion.Slerp(rotatingPart.rotation, rotation, Time.deltaTime * rotationSpeed);
 	}
 
 	private void LookAtTarget()
 	{
-		Quaternion rotation = Quaternion.LookRotation(target.position - rotatingPart.position);
-		// rotation.x = 0; This is for limiting the rotation to the y axis. I needed this for my project so just
-		// rotation.z = 0;                 delete or add the lines you need to have it behave the way you want.
-		//rotatingPart.rotation = Quaternion.Slerp(rotatingPart.rotation, rotation, Time.deltaTime * rotationSpeed);
+		Vector3 targetLocation = Vector3.one;
+		if (towerTargeting == TowerTargeting.Direct)
+		{
+			if (target == null) return;
+			targetLocation = target.transform.position;
+		}
+		else if (towerTargeting == TowerTargeting.Ground)
+		{
+			targetLocation = targetController.transform.position;
+			targetLocation.y += 0.5f;
+		}
+		Quaternion rotation = Quaternion.LookRotation(targetLocation - rotatingPart.position);
 		rotatingPart.rotation =
-		Quaternion.RotateTowards(rotatingPart.rotation, // start from our current orientation
-		rotation, // blend toward the target rotation
-		Time.deltaTime * rotationSpeed // turn at most rotationSpeed degrees per second
-		);
+		Quaternion.RotateTowards(rotatingPart.rotation, 
+		rotation, Time.deltaTime * rotationSpeed * GameManager.gameSpeedMultiplier);
 	}
 
 	private void DetectEnemies()
 	{
-		foreach (Collider collider in Physics.OverlapSphere(transform.position, fireRange, LayerMask.NameToLayer("Enemy")))
+		if (towerTargeting == TowerTargeting.Ground) return;
+		foreach (Collider collider in Physics.OverlapSphere(transform.position, fireRange, 1 << LayerMask.NameToLayer("Enemy")))
 		{
-			if (collider != null && collider.CompareTag("Enemy"))
+			if (collider != null)
 			{
-				target = collider.transform;
-				return;
+				RepositionTargetDependingOnTargeting(collider.transform);
 			}
 			else
 			{
-				target = null;
+				ResetTargetDependingOnTargeting();
 			}
 		}
 	}
 
-	private void FireProjectileAtTarget(Transform target)
+	private void RepositionTargetDependingOnTargeting(Transform enemyToTarget)
 	{
-		ProjectileController projectileShot = Instantiate(projectile);
-		animator.SetTrigger("Shoot");
-		projectileShot.transform.position = projectileOrigin.position;
-		ProjectileMovementType primaryMovementType = ElementUtility.MovementForElement(elements[0]);
-		switch (ElementUtility.MovementForElement(elements[0]))
+		switch (towerTargeting)
 		{
-			case ProjectileMovementType.StraightChain:
-				projectileShot.InitializeStraightChainProjectile(target, BouncesFromElements(), SpeedFromElements(), LandingAOEFromElements(), primaryMovementType);
+			case TowerTargeting.Direct:
+				target = enemyToTarget;
 				break;
-			case ProjectileMovementType.BounceOnGround:
-				projectileShot.InitializeBounceProjectile(target.position, BouncesFromElements(), SpeedFromElements(), LandingAOEFromElements(), primaryMovementType);
+			case TowerTargeting.Ground:
 				break;
-			case ProjectileMovementType.AOEAtTower:
+			case TowerTargeting.NoTarget:
 				break;
 		}
 	}
 
-	internal void SimulateUpgrade(Element element)
+	private void ResetTargetDependingOnTargeting()
 	{
-		throw new NotImplementedException();
+		switch (towerTargeting)
+		{
+			case TowerTargeting.Direct:
+				target = null;
+				break;
+			case TowerTargeting.Ground:
+				//Vector3 targetPos = targetController.transform.position;
+				//	targetPos.y = projectileOrigin.position.y;
+				//	targetController.transform.position = targetPos;
+				break;
+			case TowerTargeting.NoTarget:
+				break;
+		}
 	}
 
-	private void OnDrawGizmos()
+	public void Initialize(float buildTime, Element initialElement)
 	{
-		Gizmos.color = Color.red;
-		Gizmos.DrawWireSphere(transform.position, fireRange);
+		Build(buildTime, initialElement);
+		SetupTargeting();
+	}
+
+	private void Build(float time, Element element)
+	{
+		elements.Enqueue(element);
+		StartBuilding(time);
+	}
+
+	private void StartBuilding(float time)
+	{
+		progress = -1f;
+		lerpElapsedTime = 0;
+		buildTime = time;
+		Material dissolveControlMaterial = Instantiate(buildMaterials[0]);
+		finalMaterial = renderers[0].material;
+		foreach (Renderer renderer in renderers)
+		{
+			renderer.material = dissolveControlMaterial;
+		}
+		building = true;
+	}
+
+	public void AddProjectileDamageMultiplier(float increase, float duration)
+	{
+		projectileDamageMultiplier += increase;
+		projectileDamageMultiplierTimer += duration;
+	}
+
+	public void AddProjectileSpeedMultiplier(float increase, float duration)
+	{
+		rangeMultiplier += increase;
+		rangeMultiplierTimer += duration;
+	}
+
+	public void AddFireRateMultiplier(float increase, float duration)
+	{
+		fireRateMultiplier += increase;
+		fireRateMultiplierTimer += duration;
+	}
+
+	public void AddAOEMultiplier(float increase, float duration)
+	{
+		projectileAOEMultiplier += increase;
+		projectileAOEMultiplierTimer += duration;
 	}
 
 	internal void Upgrade(Element element)
 	{
-		throw new NotImplementedException();
+		elements.Enqueue(element);
+		DispatchTowerUpgradedEvent();
 	}
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
-		throw new NotImplementedException();
-	}
-
-	private void DispatchParabolaDisplayRequestEvent()
-	{
-		if (ElementUtility.MovementForElement(elements[0]) == ProjectileMovementType.BounceOnGround)
+		if (eventData.button == PointerEventData.InputButton.Left)
 		{
-
+			if (towerTargeting == TowerTargeting.Ground)
+			{
+				DispatchShowTargetRequestEvent();
+				DispatchDisplayParabolaRequestEvent();
+			}
+		}
+		else if (eventData.button == PointerEventData.InputButton.Right)
+		{
+			//DispatchSellTowerRequestEvent();
 		}
 	}
 
-	private float SpeedFromElements()
+	private void DispatchSellTowerRequestEvent()
 	{
-		return 8f;
+		CodeControl.Message.Send(new SellTowerRequestEvent(this));
 	}
 
-	private float LandingAOEFromElements()
+	private void DispatchShowTargetRequestEvent()
 	{
-		return 3f;
+		CodeControl.Message.Send(new ShowTargetRequestEvent(this));
 	}
 
-	private int BouncesFromElements()
+	private void DispatchDisplayParabolaRequestEvent()
 	{
-		return 3;
+		CodeControl.Message.Send(new DisplayParabolaRequestEvent(
+			projectileOrigin,
+			ElementUtility.SpeedFromElements(elements.ToArray()),
+			projectileOrigin.position.y, 0,
+			ElementUtility.BouncesFromElements(elements.ToArray()),
+			targetController.transform));
+	}
+
+	private void DispatchStopParabolaDisplayRequestEvent()
+	{
+		CodeControl.Message.Send(new StopDisplayingParabolaRequestEvent());
+	}
+
+	private void DispatchTowerUpgradedEvent()
+	{
+		CodeControl.Message.Send(new TowerUpgradedEvent());
+	}
+
+	private void DispatchShootProjectileRequestEvent(Transform target)
+	{
+		Transform projectileTarget = towerTargeting == TowerTargeting.Direct ? target : towerTargeting == TowerTargeting.Ground ? targetController.transform : null;
+		Projectile projectile = new Projectile(projectileDamageMultiplier, rangeMultiplier, projectileAOEMultiplier, elements, target);
+		CodeControl.Message.Send(new ShootProjectileRequestEvent(projectile, projectileOrigin));
+		if (towerTargeting != TowerTargeting.NoTarget)
+		{
+			DispatchElementalMuzzleParticleRequestEvent();
+		}
+	}
+
+	private void DispatchElementalMuzzleParticleRequestEvent()
+	{
+		CodeControl.Message.Send(new ElementalMuzzleParticleRequestEvent(elements.Peek(), projectileOrigin, fireRate * fireRateMultiplier));
+	}
+
+	private void OnDrawGizmosSelected()
+	{
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(transform.position, fireRange);
 	}
 }

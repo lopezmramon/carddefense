@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &603483285617701248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7637076128938130931}
+  m_Layer: 10
+  m_Name: ChargeRotationCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7637076128938130931
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 603483285617701248}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.09, z: -0.745}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1057866751629107438}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1057866751629016258
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,7 +41,8 @@ GameObject:
   - component: {fileID: 1057866751629107432}
   - component: {fileID: 1057866751621615370}
   - component: {fileID: 8838718898520942405}
-  m_Layer: 0
+  - component: {fileID: -1692645596541848498}
+  m_Layer: 10
   m_Name: BaseWindTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,12 +99,34 @@ MonoBehaviour:
   fireCountdown: 1
   fireRange: 5
   rotationSpeed: 150
-  projectile: {fileID: 5853366049775524617, guid: 6d9595045929af84c9535cd32eb47afa,
-    type: 3}
+  buildTime: 3
+  lerpElapsedTime: 0
+  buildMaterials:
+  - {fileID: 2100000, guid: 73aff28c27a8c554e896ab5a43069a4c, type: 2}
+  - {fileID: 2100000, guid: 3934101bbeae4a346b5f7b2ed594830e, type: 2}
+  renderers:
+  - {fileID: 1057866751631008266}
+  - {fileID: 1057866751625900490}
   projectileOrigin: {fileID: 142318041920710580}
   rotatingPart: {fileID: 3674056174954873712}
   target: {fileID: 0}
-  elements: 03000000
+  chargeRotationCenter: {fileID: 7637076128938130931}
+  targetController: {fileID: 0}
+  targetControllerPrefab: {fileID: 1434821447739341955, guid: d5fbf28ac7538d14b87296ad818adb09,
+    type: 3}
+--- !u!65 &-1692645596541848498
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057866751629016258}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &1057866751629016264
 GameObject:
   m_ObjectHideFlags: 0
@@ -83,7 +136,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1057866751629107438}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +153,8 @@ Transform:
   m_LocalRotation: {x: 0.00085399183, y: -0.7071063, z: 0.00085399183, w: 0.7071063}
   m_LocalPosition: {x: -1.004, y: 0.00561118, z: -1.7407611e-14}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 7637076128938130931}
   m_Father: {fileID: 1057866751629107434}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -113,7 +167,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1057866751629107434}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +201,7 @@ GameObject:
   - component: {fileID: 1057866751629107426}
   - component: {fileID: 1057866751632007370}
   - component: {fileID: 1057866751631008266}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,7 +279,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1057866751629107436}
   - component: {fileID: 1057866751625900490}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +362,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 142318041920710580}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ProjectileOrigin
   m_TagString: Untagged
   m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
@@ -338,7 +392,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3674056174954873712}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TurretRotator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

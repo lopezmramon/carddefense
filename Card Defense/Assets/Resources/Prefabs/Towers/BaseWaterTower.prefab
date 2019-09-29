@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3548113089308956090}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ProjectileOrigin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1096025324185620005}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TurretRotator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,6 +61,36 @@ Transform:
   m_Father: {fileID: 8526196787886735802}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8045622573278555253
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2729453863856561267}
+  m_Layer: 10
+  m_Name: ChargeRotationCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2729453863856561267
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8045622573278555253}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.010902405, y: 0.029376507, z: -0.121}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8526196787886735806}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8526196787887168920
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,7 +102,8 @@ GameObject:
   - component: {fileID: 8526196787886735800}
   - component: {fileID: 8526196787894431326}
   - component: {fileID: 2939160770449199753}
-  m_Layer: 0
+  - component: {fileID: 7318720944538280428}
+  m_Layer: 10
   m_Name: BaseWaterTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,12 +160,35 @@ MonoBehaviour:
   fireCountdown: 1
   fireRange: 5
   rotationSpeed: 150
-  projectile: {fileID: 5853366049775524617, guid: 6d9595045929af84c9535cd32eb47afa,
-    type: 3}
+  buildTime: 3
+  lerpElapsedTime: 0
+  buildMaterials:
+  - {fileID: 2100000, guid: 73aff28c27a8c554e896ab5a43069a4c, type: 2}
+  - {fileID: 2100000, guid: 3934101bbeae4a346b5f7b2ed594830e, type: 2}
+  renderers:
+  - {fileID: 8526196787889161050}
+  - {fileID: 8526196787889161052}
+  - {fileID: 8526196787889161054}
   projectileOrigin: {fileID: 3548113089308956090}
   rotatingPart: {fileID: 1096025324185620005}
   target: {fileID: 0}
-  elements: 01000000
+  chargeRotationCenter: {fileID: 2729453863856561267}
+  targetController: {fileID: 0}
+  targetControllerPrefab: {fileID: 1434821447739341955, guid: d5fbf28ac7538d14b87296ad818adb09,
+    type: 3}
+--- !u!65 &7318720944538280428
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8526196787887168920}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.3331568, z: 1}
+  m_Center: {x: 0, y: 0.6665784, z: 0}
 --- !u!1 &8526196787887168922
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,7 +200,7 @@ GameObject:
   - component: {fileID: 8526196787886735802}
   - component: {fileID: 8526196787888030106}
   - component: {fileID: 8526196787889161050}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -225,7 +279,7 @@ GameObject:
   - component: {fileID: 8526196787886735804}
   - component: {fileID: 8526196787888030108}
   - component: {fileID: 8526196787889161052}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -305,7 +359,7 @@ GameObject:
   - component: {fileID: 8526196787886735806}
   - component: {fileID: 8526196787888030110}
   - component: {fileID: 8526196787889161054}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -322,7 +376,8 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.010902405, y: 0.67514926, z: 0.8724618}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 2729453863856561267}
   m_Father: {fileID: 8526196787886735804}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

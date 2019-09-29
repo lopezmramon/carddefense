@@ -1,6 +1,9 @@
 ﻿public enum EnemyType
 {
-	First,
-	Second,
-	Third
+	BatGreen,
+	BatYellow,
+	VioletGhost,
+	WhiteGhost,
+	BlueSlime,
+	RedRabbit,
 }

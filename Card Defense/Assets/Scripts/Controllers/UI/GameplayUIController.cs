@@ -5,9 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 public class GameplayUIController : MonoBehaviour
 {
-	public Text livesLeftText, currentTowerBuildingResourceText, timeBetweenWavesText;
-	public Button placeTowerButton;
-	public InputField towerX, towerY, towerElement;
+	public Text livesLeft, currentTowerBuildingResource, timeBetweenWaves, gameSpeed;
+	public Button emptyHand, redrawHand;
 
 	private void Awake()
 	{
@@ -15,39 +14,79 @@ public class GameplayUIController : MonoBehaviour
 		CodeControl.Message.AddListener<WaveFinishedEvent>(OnWaveFinished);
 		CodeControl.Message.AddListener<WaveStartedEvent>(OnWaveStarted);
 		CodeControl.Message.AddListener<LevelReadyEvent>(OnLevelReady);
-		placeTowerButton.onClick.AddListener(() =>
+		CodeControl.Message.AddListener<GameSpeedChangedEvent>(OnGameSpeedChanged);
+		CodeControl.Message.AddListener<ResourceChangedEvent>(OnResourceChanged);
+		emptyHand.onClick.AddListener(() =>
 		{
-			Tile tile = LevelManager.currentLevel.mapData.FindTileByCoordinates(int.Parse(towerX.text), int.Parse(towerY.text));
-			CodeControl.Message.Send(new TowerPlacementRequestEvent(tile, (Element)int.Parse(towerElement.text)));
+			CodeControl.Message.Send(new EmptyHandRequestEvent());
 		});
+		redrawHand.onClick.AddListener(() =>
+		{
+			CodeControl.Message.Send(new RedrawHandRequestEvent());
+		});
+	}
+
+	private void OnResourceChanged(ResourceChangedEvent obj)
+	{
+		currentTowerBuildingResource.text = string.Format("Resource: {0}", obj.resourceAmount);
+	}
+
+	private void Start()
+	{
+		SetSpeedText(GameManager.gameSpeedMultiplier);
+	}
+
+	private void OnGameSpeedChanged(GameSpeedChangedEvent obj)
+	{
+		SetSpeedText(obj.speed);
 	}
 
 	private void OnLevelReady(LevelReadyEvent obj)
 	{
-		livesLeftText.text = string.Format("Lives Left: {0}", obj.level.lives);
-		currentTowerBuildingResourceText.text = string.Format("Resource: {0}", obj.level.startingTowerBuildingResource);
+		livesLeft.text = string.Format("Lives Left: {0}", obj.level.lives);
+		currentTowerBuildingResource.text = string.Format("Resource: {0}", obj.level.startingTowerBuildingResource);
 	}
 
 	private void OnWaveStarted(WaveStartedEvent obj)
 	{
-		timeBetweenWavesText.gameObject.SetActive(false);
+		timeBetweenWaves.gameObject.SetActive(false);
 	}
 
 	private void Update()
 	{
-		if (timeBetweenWavesText.gameObject.activeInHierarchy)
+		if (timeBetweenWaves.gameObject.activeInHierarchy)
 		{
-			timeBetweenWavesText.text = string.Format("Time left for next wave: {0}", Math.Truncate(TimeManager.timeBetweenWaves));
+			timeBetweenWaves.text = string.Format("Time left for next wave: {0}", Math.Truncate(TimeManager.timeBetweenWaves));
 		}
+	}
+
+	private void SetSpeedText(float speed)
+	{
+		gameSpeed.text = string.Format("Game Speed: {0}", speed);
 	}
 
 	private void OnWaveFinished(WaveFinishedEvent obj)
 	{
-		timeBetweenWavesText.gameObject.SetActive(true);
+		timeBetweenWaves.gameObject.SetActive(true);
 	}
 
 	private void OnLivesChanged(LivesChangedEvent obj)
 	{
-		livesLeftText.text = string.Format("Lives Left: {0}", obj.totalLives.ToString());
+		livesLeft.text = string.Format("Lives Left: {0}", obj.totalLives.ToString());
+	}
+
+	public void DispatchSpeedSetRequestEvent(float speed)
+	{
+		CodeControl.Message.Send(new GameSpeedSetRequestEvent(speed));
+	}
+
+	public void DispatchSpeedChangeRequestEvent(float change)
+	{
+		CodeControl.Message.Send(new GameSpeedChangeRequestEvent(change));
+	}
+
+	public void DispatchNextWaveRequestEvent()
+	{
+		CodeControl.Message.Send(new HurryNextWaveRequestEvent());
 	}
 }

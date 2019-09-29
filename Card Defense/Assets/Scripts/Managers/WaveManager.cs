@@ -25,16 +25,28 @@ public class WaveManager : MonoBehaviour
 	{
 		currentWaveIndex++;
 		currentEnemyIndex = 0;
-		currentWave = currentLevel.waves[currentWaveIndex];
-		DispatchWaveStartedEvent(currentWaveIndex);
-		ManageWave();
+		if(currentWaveIndex < currentLevel.waves.Count)
+		{
+			currentWave = currentLevel.waves[currentWaveIndex];
+			DispatchWaveStartedEvent(currentWaveIndex);
+			ManageWave();
+		}
+		else
+		{
+			DispatchAllWavesFinishedEvent();
+		}
 	}
 
 	private void OnLevelReady(LevelReadyEvent obj)
 	{
+		SetupForLevel(obj.level);
+	}
+
+	private void SetupForLevel(Level level)
+	{
 		currentWaveIndex = -1;
 		currentEnemyIndex = 0;
-		currentLevel = obj.level;
+		currentLevel = level;
 		startingPoints = currentLevel.mapData.GetStartingPoints().ToArray();
 		endingPoints = currentLevel.mapData.GetEndingPoints().ToArray();
 	}
@@ -88,10 +100,9 @@ public class WaveManager : MonoBehaviour
 		CodeControl.Message.Send(new WaveStartedEvent(wave));
 	}
 
-	private void AllWavesFinishedEvent()
+	private void DispatchAllWavesFinishedEvent()
 	{
 		CodeControl.Message.Send(new AllWavesFinishedEvent(currentLevel.waves.Count, 
 			currentLevel.TotalEnemiesInLevel()));
 	}
-
 }

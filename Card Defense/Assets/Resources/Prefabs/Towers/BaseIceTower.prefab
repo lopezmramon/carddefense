@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5957533474466866490
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5639181273590564120}
+  m_Layer: 10
+  m_Name: ChargeRotationCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5639181273590564120
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5957533474466866490}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.596, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6514153823110199097}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6514153822992634208
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6514153822992634215}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ProjectileOrigin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +71,8 @@ GameObject:
   - component: {fileID: 6514153823110199097}
   - component: {fileID: 6514153823100639453}
   - component: {fileID: 6514153823110065586}
-  m_Layer: 0
+  - component: {fileID: 2212922742074992356}
+  m_Layer: 10
   m_Name: BaseIceTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,6 +92,7 @@ Transform:
   m_Children:
   - {fileID: 6514153823110199103}
   - {fileID: 6514153822992634215}
+  - {fileID: 5639181273590564120}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -99,12 +131,34 @@ MonoBehaviour:
   fireCountdown: 1
   fireRange: 5
   rotationSpeed: 0
-  projectile: {fileID: 5853366049775524617, guid: 6d9595045929af84c9535cd32eb47afa,
-    type: 3}
+  buildTime: 3
+  lerpElapsedTime: 0
+  buildMaterials:
+  - {fileID: 2100000, guid: 73aff28c27a8c554e896ab5a43069a4c, type: 2}
+  - {fileID: 2100000, guid: 3934101bbeae4a346b5f7b2ed594830e, type: 2}
+  renderers:
+  - {fileID: 6514153823107904991}
+  - {fileID: 6514153823107904989}
   projectileOrigin: {fileID: 6514153822992634215}
   rotatingPart: {fileID: 6514153823110199101}
   target: {fileID: 0}
-  elements: 04000000
+  chargeRotationCenter: {fileID: 5639181273590564120}
+  targetController: {fileID: 0}
+  targetControllerPrefab: {fileID: 1434821447739341955, guid: d5fbf28ac7538d14b87296ad818adb09,
+    type: 3}
+--- !u!65 &2212922742074992356
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6514153823110163225}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.5520387, z: 1}
+  m_Center: {x: 0, y: 0.77601933, z: 0}
 --- !u!1 &6514153823110163229
 GameObject:
   m_ObjectHideFlags: 0
@@ -116,7 +170,7 @@ GameObject:
   - component: {fileID: 6514153823110199101}
   - component: {fileID: 6514153823106774813}
   - component: {fileID: 6514153823107904989}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Crystal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +248,7 @@ GameObject:
   - component: {fileID: 6514153823110199103}
   - component: {fileID: 6514153823106774815}
   - component: {fileID: 6514153823107904991}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}

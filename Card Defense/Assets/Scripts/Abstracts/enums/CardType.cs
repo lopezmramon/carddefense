@@ -1,7 +1,9 @@
-﻿[System.Serializable]
+﻿using System;
+using UnityEngine;
+[System.Serializable]
 public enum CardType
 {
 	Tower,
-	Powerup,
-	Other
+	PropertyModifier,
+	HandModifier
 }

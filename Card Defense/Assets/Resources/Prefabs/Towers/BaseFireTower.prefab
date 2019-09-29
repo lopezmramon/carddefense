@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7847267605896437541}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ProjectileOrigin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6214477692799867695}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TurretRotator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,6 +61,36 @@ Transform:
   m_Father: {fileID: 7884760375019722292}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6265655923057924690
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3417957086991953138}
+  m_Layer: 10
+  m_Name: ChargeRotationCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3417957086991953138
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6265655923057924690}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.003933907, y: 0.122614205, z: 0.138}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7884760375019722288}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7884760375020210704
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,7 +102,7 @@ GameObject:
   - component: {fileID: 7884760375019722288}
   - component: {fileID: 7884760375018919440}
   - component: {fileID: 7884760375017952464}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +119,8 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.003933907, y: 0.3201667, z: 0.42980245}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 3417957086991953138}
   m_Father: {fileID: 7884760375019722290}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -150,7 +181,7 @@ GameObject:
   - component: {fileID: 7884760375019722290}
   - component: {fileID: 7884760375018919442}
   - component: {fileID: 7884760375017952466}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +261,7 @@ GameObject:
   - component: {fileID: 7884760375019722292}
   - component: {fileID: 7884760375018919444}
   - component: {fileID: 7884760375017952468}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -309,7 +340,8 @@ GameObject:
   - component: {fileID: 7884760375019722294}
   - component: {fileID: 7884760375029578192}
   - component: {fileID: 5487675284959697054}
-  m_Layer: 0
+  - component: {fileID: -474227144122059611}
+  m_Layer: 10
   m_Name: BaseFireTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -363,12 +395,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fireRate: 1
-  fireCountdown: 1
+  fireCountdown: 0.5
   fireRange: 5
   rotationSpeed: 150
-  projectile: {fileID: 5853366049775524617, guid: 6d9595045929af84c9535cd32eb47afa,
-    type: 3}
+  buildTime: 3
+  lerpElapsedTime: 0
+  buildMaterials:
+  - {fileID: 2100000, guid: 73aff28c27a8c554e896ab5a43069a4c, type: 2}
+  - {fileID: 2100000, guid: 3934101bbeae4a346b5f7b2ed594830e, type: 2}
+  renderers:
+  - {fileID: 7884760375017952468}
+  - {fileID: 7884760375017952466}
+  - {fileID: 7884760375017952464}
   projectileOrigin: {fileID: 7847267605896437541}
   rotatingPart: {fileID: 6214477692799867695}
   target: {fileID: 0}
-  elements: 00000000
+  chargeRotationCenter: {fileID: 3417957086991953138}
+  targetController: {fileID: 0}
+  targetControllerPrefab: {fileID: 1434821447739341955, guid: d5fbf28ac7538d14b87296ad818adb09,
+    type: 3}
+--- !u!65 &-474227144122059611
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7884760375020210710}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.5, z: 0}

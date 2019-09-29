@@ -1,8 +1,8 @@
 ﻿public class EnemyReachedDestinationEvent : CodeControl.Message
 {
-	public Enemy enemy;
+	public EnemyController enemy;
 
-	public EnemyReachedDestinationEvent(Enemy enemy)
+	public EnemyReachedDestinationEvent(EnemyController enemy)
 	{
 		this.enemy = enemy;
 	}

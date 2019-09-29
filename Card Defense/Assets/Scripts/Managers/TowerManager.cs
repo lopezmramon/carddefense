@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TowerManager : MonoBehaviour
@@ -17,27 +18,76 @@ public class TowerManager : MonoBehaviour
 		CodeControl.Message.AddListener<CardOverTileEvent>(OnCardOverTile);
 		CodeControl.Message.AddListener<CardNoLongerOverTileEvent>(OnCardNoLongerOverTile);
 		CodeControl.Message.AddListener<CardDroppedEvent>(OnCardDropped);
+		CodeControl.Message.AddListener<ShowTargetRequestEvent>(OnTargetShowRequested);
+		CodeControl.Message.AddListener<StopShowingTargetsRequestEvent>(OnStopShowingTargetsRequested);
+		CodeControl.Message.AddListener<SellTowerRequestEvent>(OnSellTowerRequested);
 		GenerateVisualTowers();
+	}
+
+	private void OnSellTowerRequested(SellTowerRequestEvent obj)
+	{
+		SellTower(obj.towerController);
+	}
+
+	private void OnStopShowingTargetsRequested(StopShowingTargetsRequestEvent obj)
+	{
+		DeactivateAllTargets();
+		DispatchStopDisplayingParabolaRequestEvent();
+	}
+
+	private void OnTargetShowRequested(ShowTargetRequestEvent obj)
+	{
+		DeactivateAllTargets();
+		obj.towerController.ActivateTarget();
+	}
+
+	private void SellTower(TowerController towerController)
+	{
+		KeyValuePair<Tile, TowerController> item = towersPlaced.First(kvp => kvp.Value == towerController);
+		towersPlaced.Remove(item.Key);
+		DispatchTowerSoldEvent(towerController);
+		Destroy(towerController.gameObject);
+	}
+
+	private void DeactivateAllTargets()
+	{
+		foreach (KeyValuePair<Tile, TowerController> tower in towersPlaced)
+		{
+			tower.Value.DeactivateTarget();
+		}
 	}
 
 	private void OnCardDropped(CardDroppedEvent obj)
 	{
-		if (hoverTile == null || cardOverTile == null || cardOverTile.card.cardType != CardType.Tower) return;
-		if(ResourceManager.currentResourceAmount >= cardOverTile.card.cost)
+		if (hoverTile == null || cardOverTile == null) return;
+		if (cardOverTile.card.cardType == CardType.Tower)
 		{
-			ProcessRequest(hoverTile, cardOverTile.card.element);
-			DispatchResourceChangeRequestEvent(-cardOverTile.card.cost);
-			DispatchCardConsumedEvent();
+			if (ResourceManager.currentResourceAmount >= cardOverTile.card.cost)
+			{
+				ProcessRequest(hoverTile, cardOverTile.card.element);
+				DispatchResourceChangeRequestEvent(-cardOverTile.card.cost);
+				DispatchCardConsumeRequestEvent();
+			}
+			else
+			{
+				DeactivateAllVisualTowers();
+			}
 		}
-		else
+		else if (cardOverTile.card.cardType == CardType.PropertyModifier)
 		{
-			DeactivateAllVisualTowers();			
+			if (ResourceManager.currentResourceAmount >= cardOverTile.card.cost)
+			{
+				AddMultipliers(hoverTile, cardOverTile.card.propertyModifiers, cardOverTile.card.propertyModifierValues, cardOverTile.card.duration);
+				DispatchResourceChangeRequestEvent(-cardOverTile.card.cost);
+				DispatchCardConsumeRequestEvent();
+			}
 		}
+
 	}
 
-	private void DispatchCardConsumedEvent()
+	private void DispatchCardConsumeRequestEvent()
 	{
-		CodeControl.Message.Send(new CardConsumedEvent(cardOverTile));
+		CodeControl.Message.Send(new CardsConsumeRequestEvent(cardOverTile));
 		cardOverTile = null;
 	}
 
@@ -52,18 +102,60 @@ public class TowerManager : MonoBehaviour
 	{
 		hoverTile = obj.tile;
 		cardOverTile = obj.card;
+		Card card = obj.card.card;
 		if (towersPlaced.ContainsKey(obj.tile))
 		{
-			if(obj.card.card.cardType == CardType.Tower)
+			if (card.cardType == CardType.Tower)
 			{
-				towersPlaced[obj.tile].SimulateUpgrade(obj.card.card.element);
+				SimulateUpgrade(towersPlaced[obj.tile], card);
+			}
+			else if (card.cardType == CardType.PropertyModifier)
+			{
+				SimulateModifier(towersPlaced[obj.tile], card);
 			}
 		}
 		else
 		{
-			DispatchTileVFXRequestEvent(obj.tile, obj.card.card.element);
-			PlaceVisualTowerAtTile(obj.tile, obj.card.card.element);
+			DispatchTileVFXRequestEvent(obj.tile, card.element);
+			if (card.cardType == CardType.Tower) PlaceVisualTowerAtTile(obj.tile, card.element);
 		}
+	}
+
+	private void AddMultipliers(Tile hoverTile, PropertyModifier[] propertyModifiers, float[] propertyModifierValues, float duration)
+	{
+		TowerController tower = towersPlaced[hoverTile];
+		if (tower == null) return;
+		for (int i = 0; i < propertyModifiers.Length; i++)
+		{
+			switch (propertyModifiers[i])
+			{
+				case PropertyModifier.Damage:
+					tower.AddProjectileDamageMultiplier(propertyModifierValues[i] / 100, duration);
+					break;
+				case PropertyModifier.FireRate:
+					tower.AddFireRateMultiplier(propertyModifierValues[i] / 100, duration);
+					break;
+				case PropertyModifier.AOE:
+					tower.AddAOEMultiplier(propertyModifierValues[i] / 100, duration);
+					break;
+				case PropertyModifier.Range:
+					tower.AddProjectileSpeedMultiplier(propertyModifierValues[i] / 100, duration);
+					break;
+			}
+		}
+	}
+
+	private void SimulateModifier(TowerController towerController, Card card)
+	{
+		if (card.propertyModifiers[0] != PropertyModifier.None)
+		{
+			DispatchSimulateTowerModifierRequestEvent(towerController, card.propertyModifiers, card.propertyModifierValues);
+		}
+	}
+
+	private void SimulateUpgrade(TowerController tower, Card card)
+	{
+		DispatchSimulateTowerUpgradeRequestEvent(tower, card.element);
 	}
 
 	private void PlaceVisualTowerAtTile(Tile tile, Element element)
@@ -88,6 +180,7 @@ public class TowerManager : MonoBehaviour
 	{
 		foreach (TowerController tower in visualTowers)
 		{
+			if (tower == null) continue;
 			tower.gameObject.SetActive(false);
 		}
 	}
@@ -103,6 +196,7 @@ public class TowerManager : MonoBehaviour
 			visualTowers[i].gameObject.SetActive(false);
 		}
 	}
+
 	private void ProcessRequest(Tile tile, Element element)
 	{
 		if (towersPlaced.ContainsKey(tile))
@@ -112,14 +206,16 @@ public class TowerManager : MonoBehaviour
 		else
 		{
 			BuildBaseTower(tile, element);
-		}		
+		}
 	}
 
 	private void BuildBaseTower(Tile tile, Element element)
 	{
 		if (tile.transform == null) return;
 		TowerController tower = Instantiate(baseTowers[(int)element], tile.transform);
+		tower.Initialize(2.5f, element);
 		tower.transform.localPosition = new Vector3(0, 0.5f, 0);
+		towersPlaced.Add(tile, tower);
 	}
 
 	private void UpgradeTower(Tile tile, Element element)
@@ -135,5 +231,25 @@ public class TowerManager : MonoBehaviour
 	private void DispatchResourceChangeRequestEvent(int amount)
 	{
 		CodeControl.Message.Send(new ResourceChangeRequestEvent(amount));
+	}
+
+	private void DispatchSimulateTowerUpgradeRequestEvent(TowerController tower, Element element)
+	{
+		CodeControl.Message.Send(new SimulateUpgradeRequestEvent(tower, element));
+	}
+
+	private void DispatchSimulateTowerModifierRequestEvent(TowerController towerController, PropertyModifier[] propertyModifiers, float[] propertyModifierValues)
+	{
+		CodeControl.Message.Send(new SimulateTowerModifierRequestEvent(towerController, propertyModifiers, propertyModifierValues));
+	}
+
+	private void DispatchStopDisplayingParabolaRequestEvent()
+	{
+		CodeControl.Message.Send(new StopDisplayingParabolaRequestEvent());
+	}
+
+	private void DispatchTowerSoldEvent(TowerController tower)
+	{
+		CodeControl.Message.Send(new TowerSoldEvent(tower));
 	}
 }

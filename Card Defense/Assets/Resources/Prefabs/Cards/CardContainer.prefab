@@ -109,8 +109,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -3.0800018, y: -37.84}
-  m_SizeDelta: {x: 93.97, y: 17.28}
+  m_AnchoredPosition: {x: -2.23, y: -37.359974}
+  m_SizeDelta: {x: 95.55, y: 12.16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4920722806637330764
 CanvasRenderer:
@@ -141,7 +141,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: a42d4f5c670434a6abca775f209cc9db, type: 2}
+    m_Font: {fileID: 12800000, guid: 129e29d68372548eda6c8d491c565ae7, type: 2}
     m_FontSize: 0
     m_FontStyle: 0
     m_BestFit: 0
@@ -149,7 +149,7 @@ MonoBehaviour:
     m_MaxSize: 71
     m_Alignment: 1
     m_AlignByGeometry: 0
-    m_RichText: 1
+    m_RichText: 0
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
@@ -295,7 +295,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: a42d4f5c670434a6abca775f209cc9db, type: 2}
+    m_Font: {fileID: 12800000, guid: 129e29d68372548eda6c8d491c565ae7, type: 2}
     m_FontSize: 0
     m_FontStyle: 1
     m_BestFit: 0
@@ -303,7 +303,7 @@ MonoBehaviour:
     m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
-    m_RichText: 1
+    m_RichText: 0
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
@@ -449,7 +449,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: d0593b95516484b7c8e98906234156df, type: 2}
+    m_Font: {fileID: 12800000, guid: 129e29d68372548eda6c8d491c565ae7, type: 2}
     m_FontSize: 0
     m_FontStyle: 1
     m_BestFit: 0
@@ -457,7 +457,7 @@ MonoBehaviour:
     m_MaxSize: 40
     m_Alignment: 5
     m_AlignByGeometry: 0
-    m_RichText: 1
+    m_RichText: 0
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
@@ -522,9 +522,23 @@ MonoBehaviour:
   background: {fileID: 7486260513888736634}
   illustration: {fileID: 7486260515921143813}
   resource: {fileID: 7486260514357793908}
+  raycastTarget: {fileID: 0}
   description: {fileID: 7486260514316618221}
   cost: {fileID: 7486260514452886216}
   cardName: {fileID: 8630631714461201913}
+  card:
+    name: 
+    cardType: 0
+    element: 0
+    description: 
+    cost: 0
+    time: 0
+    backgroundFileName: 
+    illustrationFileName: 
+    resourceFileName: 
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
 --- !u!222 &7486260515015080992
 CanvasRenderer:
   m_ObjectHideFlags: 0

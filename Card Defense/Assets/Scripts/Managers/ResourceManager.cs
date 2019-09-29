@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ResourceManager : MonoBehaviour
@@ -12,7 +10,18 @@ public class ResourceManager : MonoBehaviour
 	{
 		CodeControl.Message.AddListener<ResourceChangeRequestEvent>(OnResourceChangeRequested);
 		CodeControl.Message.AddListener<InfiniteResourcePowerupActivatedEvent>(OnInfiniteResourcePowerupActivated);
-		currentResourceAmount = 200;
+		CodeControl.Message.AddListener<TowerSoldEvent>(OnTowerSold);
+		CodeControl.Message.AddListener<LevelReadyEvent>(OnLevelReady);
+	}
+
+	private void OnLevelReady(LevelReadyEvent obj)
+	{
+		ChangeResource(obj.level.startingTowerBuildingResource);
+	}
+
+	private void OnTowerSold(TowerSoldEvent obj)
+	{
+		ChangeResource(ElementUtility.ResourceRefundForSellingElements(obj.tower.elements.ToArray()));
 	}
 
 	private void OnInfiniteResourcePowerupActivated(InfiniteResourcePowerupActivatedEvent obj)
@@ -22,11 +31,17 @@ public class ResourceManager : MonoBehaviour
 
 	private void OnResourceChangeRequested(ResourceChangeRequestEvent obj)
 	{
-		currentResourceAmount += obj.amount;
-		if(obj.amount < 0 && infiniteResourcePowerupAmount > 0)
+		ChangeResource(obj.amount);
+	}
+
+	private void ChangeResource(int change)
+	{
+		currentResourceAmount += change;
+		if (change < 0 && infiniteResourcePowerupAmount > 0)
 		{
 			infiniteResourcePowerupAmount--;
 		}
+		DispatchResourceChangedEvent();
 	}
 
 	private void DispatchResourceChangedEvent()

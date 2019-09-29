@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Test Level
   m_EditorClassIdentifier: 
   levelName: Test Level
-  theme: 6
+  theme: 5
   mapData:
     tiles:
     - x: 0
@@ -173,13 +173,13 @@ MonoBehaviour:
     - enemyType: 0
       specialAbility: 0
       livesCost: 0
-    - enemyType: 0
+    - enemyType: 1
       specialAbility: 0
       livesCost: 0
-    - enemyType: 0
+    - enemyType: 2
       specialAbility: 0
       livesCost: 0
-    - enemyType: 0
+    - enemyType: 3
       specialAbility: 8
       livesCost: 0
     - enemyType: 0
@@ -189,34 +189,40 @@ MonoBehaviour:
       specialAbility: 0
       livesCost: 0
   - enemies:
-    - enemyType: 0
+    - enemyType: 5
       specialAbility: 0
       livesCost: 0
-    - enemyType: 0
+    - enemyType: 5
       specialAbility: 0
       livesCost: 0
-    - enemyType: 0
+    - enemyType: 5
       specialAbility: 0
       livesCost: 0
-    - enemyType: 0
+    - enemyType: 5
       specialAbility: 0
       livesCost: 0
-    - enemyType: 0
+  - enemies:
+    - enemyType: 4
+      specialAbility: 0
+      livesCost: 0
+    - enemyType: 4
+      specialAbility: 0
+      livesCost: 0
+    - enemyType: 4
+      specialAbility: 0
+      livesCost: 0
+    - enemyType: 4
       specialAbility: 0
       livesCost: 0
   - enemies:
     - enemyType: 0
       specialAbility: 0
       livesCost: 0
-  - enemies:
     - enemyType: 0
       specialAbility: 0
       livesCost: 0
     - enemyType: 0
       specialAbility: 0
       livesCost: 0
-    - enemyType: 0
-      specialAbility: 0
-      livesCost: 0
-  lives: 5
-  startingTowerBuildingResource: 5
+  lives: 50
+  startingTowerBuildingResource: 500

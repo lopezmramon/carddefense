@@ -4,20 +4,31 @@ using UnityEngine;
 
 public class DisplayParabolaRequestEvent : CodeControl.Message
 {
-	public Vector3 startingPos;
+	public Transform projectileOrigin;
 	public Vector3 target;
 	public float speed;
 	public float arcHeight;
 	public float xReductionPerBounce;
 	public int bounces;
+	public Transform variableTarget;
 
-	public DisplayParabolaRequestEvent(Vector3 startingPos, Vector3 target, float speed, float arcHeight, float xReductionPerBounce, int bounces)
+	public DisplayParabolaRequestEvent(Transform projectileOrigin, Vector3 target, float speed, float arcHeight, float xReductionPerBounce, int bounces)
 	{
-		this.startingPos = startingPos;
+		this.projectileOrigin = projectileOrigin;
 		this.target = target;
 		this.speed = speed;
 		this.arcHeight = arcHeight;
 		this.xReductionPerBounce = xReductionPerBounce;
 		this.bounces = bounces;
+	}
+
+	public DisplayParabolaRequestEvent(Transform projectileOrigin, float speed, float arcHeight, float xReductionPerBounce, int bounces, Transform variableTarget)
+	{
+		this.projectileOrigin = projectileOrigin;
+		this.speed = speed;
+		this.arcHeight = arcHeight;
+		this.xReductionPerBounce = xReductionPerBounce;
+		this.bounces = bounces;
+		this.variableTarget = variableTarget;
 	}
 }

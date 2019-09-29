@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3951261325552904328}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TurretRotator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,10 +40,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6419821505025179154}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ProjectileOrigin
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -61,6 +61,36 @@ Transform:
   m_Father: {fileID: 5754222554613326569}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3019268834338614227
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1316502015584051712}
+  m_Layer: 10
+  m_Name: ChargeRotationCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1316502015584051712
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3019268834338614227}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.0039339066, y: -0.044385806, z: 0.306}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5754222554613326575}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5754222554613235401
 GameObject:
   m_ObjectHideFlags: 0
@@ -72,7 +102,7 @@ GameObject:
   - component: {fileID: 5754222554613326575}
   - component: {fileID: 5754222554616226505}
   - component: {fileID: 5754222554615226377}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +119,8 @@ Transform:
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.0039339066, y: 0.24136777, z: 0.33360517}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1316502015584051712}
   m_Father: {fileID: 5754222554613326569}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -150,7 +181,7 @@ GameObject:
   - component: {fileID: 5754222554613326569}
   - component: {fileID: 5754222554616226507}
   - component: {fileID: 5754222554615226379}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -230,7 +261,8 @@ GameObject:
   - component: {fileID: 5754222554613326571}
   - component: {fileID: 5754222554622610699}
   - component: {fileID: 7440569777272994356}
-  m_Layer: 0
+  - component: {fileID: 5386093848307543607}
+  m_Layer: 10
   m_Name: BaseEarthTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -287,12 +319,35 @@ MonoBehaviour:
   fireCountdown: 1
   fireRange: 5
   rotationSpeed: 150
-  projectile: {fileID: 5853366049775524617, guid: 6d9595045929af84c9535cd32eb47afa,
-    type: 3}
+  buildTime: 3
+  lerpElapsedTime: 0
+  buildMaterials:
+  - {fileID: 2100000, guid: 73aff28c27a8c554e896ab5a43069a4c, type: 2}
+  - {fileID: 2100000, guid: 3934101bbeae4a346b5f7b2ed594830e, type: 2}
+  renderers:
+  - {fileID: 5754222554615226383}
+  - {fileID: 5754222554615226379}
+  - {fileID: 5754222554615226377}
   projectileOrigin: {fileID: 6419821505025179154}
-  rotatingPart: {fileID: 5754222554613326569}
-  target: {fileID: 3951261325552904328}
-  elements: 02000000
+  rotatingPart: {fileID: 3951261325552904328}
+  target: {fileID: 0}
+  chargeRotationCenter: {fileID: 1316502015584051712}
+  targetController: {fileID: 0}
+  targetControllerPrefab: {fileID: 1434821447739341955, guid: d5fbf28ac7538d14b87296ad818adb09,
+    type: 3}
+--- !u!65 &5386093848307543607
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5754222554613235405}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &5754222554613235407
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,7 +359,7 @@ GameObject:
   - component: {fileID: 5754222554613326573}
   - component: {fileID: 5754222554616226511}
   - component: {fileID: 5754222554615226383}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}

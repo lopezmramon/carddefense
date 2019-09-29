@@ -25,10 +25,12 @@ public class Tile
 		IsStartingPoint = false;
 		IsEndingPoint = false;
 	}
+
 	public Vector3 Vector3FromCoordinates()
 	{
 		return new Vector3(x, 0, y);
 	}
+
 	public bool CanBeBuiltOn()
 	{
 		return IsStartingPoint && IsEndingPoint && walkable;

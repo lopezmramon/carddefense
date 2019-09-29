@@ -1,42 +1,53 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
 	private ProjectileMover projectileMover;
-	public float damage, aoe;
-	private int reflectionsLeft;
+	private Projectile projectile;
+	public float damage, aoe, speed;
+	private int bouncesLeft, chainLength;
 	private ProjectileMovementType primaryMovementType;
+	private AOEDamageDealer AOEDamageDealer;
 
-	public void InitializeStraightChainProjectile(Transform target, int chainLength, float speed, float aoe, ProjectileMovementType primaryMovementType)
+	internal void Initialize(Projectile projectile)
 	{
-		reflectionsLeft = chainLength;
-		this.aoe = aoe;
-		this.primaryMovementType = primaryMovementType;
-		projectileMover = new ProjectileMover(transform, target, speed);		
-	}
+		Element[] projectileElements = projectile.elements.ToArray();
+		bouncesLeft = ElementUtility.BouncesFromElements(projectileElements);
+		chainLength = ElementUtility.ChainLengthFromElements(projectileElements);
+		speed = ElementUtility.SpeedFromElements(projectileElements);
+		AOEDamageDealer = new AOEDamageDealer(ElementUtility.AOEFromElements(projectileElements) * projectile.areaOfEffectMultiplier, transform);
+		primaryMovementType = ElementUtility.MovementForElement(projectile.elements.Peek());
+		this.projectile = projectile;
+		switch (primaryMovementType)
+		{
+			case ProjectileMovementType.BounceOnGround:
 
-	public void InitializeBounceProjectile(Vector3 target, int bounces, float speed, float aoe, ProjectileMovementType primaryMovementType)
-	{
-		reflectionsLeft = bounces;
-		this.primaryMovementType = primaryMovementType;
-		this.aoe = aoe;
-		projectileMover = new ProjectileMover(transform, target, speed);		
+				Parabola[] parabolas = ParabolaCalculator.CalculateFullTrajectory(transform.position, projectile.target.position,
+					ElementUtility.SpeedFromElements(projectileElements), transform.position.y, 0, bouncesLeft);
+				projectileMover = new ProjectileMover(transform, parabolas, ElementUtility.SpeedFromElements(projectile.elements.ToArray()) * projectile.speedMultiplier);
+				break;
+			case ProjectileMovementType.StraightChain:
+				projectileMover = new ProjectileMover(transform, projectile.target, ElementUtility.SpeedFromElements(projectile.elements.ToArray()) * projectile.speedMultiplier);
+				break;
+			case ProjectileMovementType.AOEAtTower:
+				projectileMover = new ProjectileMover(projectile.speedMultiplier * speed);
+				break;
+		}
 	}
 
 	private void Update()
 	{
-		if (projectileMover == null) return;
 		switch (primaryMovementType)
 		{
 			case ProjectileMovementType.StraightChain:
-				projectileMover.MoveStraightToAssignedTarget((success)=> 
+				projectileMover.MoveStraightToAssignedTarget((success) =>
 				{
 					if (success)
 					{
-						projectileMover.target.GetComponent<EnemyController>().Damage(damage);
-						Destroy(gameObject);
+						DispatchEnemyDamageRequestEvent(projectileMover.target.GetComponent<EnemyController>(), damage);
+						DispatchElementContactParticleRequestEvent(transform.position);
+						ContinueChain();
 					}
 					else
 					{
@@ -46,7 +57,7 @@ public class ProjectileController : MonoBehaviour
 				);
 				break;
 			case ProjectileMovementType.BounceOnGround:
-				projectileMover.BounceOnTargetPosition((success)=> 
+				projectileMover.BounceOnTargetPosition((success) =>
 				{
 					if (success)
 					{
@@ -58,20 +69,78 @@ public class ProjectileController : MonoBehaviour
 					}
 				});
 				break;
+			case ProjectileMovementType.AOEAtTower:
+				OnAOEAtTowerActivation();
+				break;
 		}
+	}
+
+	private void ContinueChain()
+	{
+		projectileMover.reassigning = true;
+		if (chainLength > 0)
+		{
+			string targetName = projectileMover.target == null ? string.Empty : projectileMover.target.name;
+			Transform closestEnemy = AOEDamageDealer.ClosestEnemy(transform.position, targetName);
+			if (closestEnemy == null)
+			{
+				Destroy(gameObject);
+			}
+			else
+			{
+				chainLength--;
+				projectileMover.target = closestEnemy;
+				projectileMover.reassigning = false;
+			}
+		}
+		else
+		{
+			Destroy(gameObject);
+		}
+	}
+
+	private void OnAOEAtTowerActivation()
+	{
+		AOEDamageDealer.DealAOEDamage(damage);
+		DispatchElementContactParticleRequestEvent(AOEDamageDealer.EnemyPositionsNearPointWithCurrentAOE(transform.position));
+		Destroy(gameObject);
 	}
 
 	private void AnalyzeBounceResult()
 	{
-		reflectionsLeft--;
-		Collider[] hitEnemies = Physics.OverlapSphere(transform.position, aoe, LayerMask.NameToLayer("Enemy"));
-		foreach(Collider collider in hitEnemies)
+		if (projectile.elements.Peek() == Element.Water)
 		{
-			if(collider.GetComponent<EnemyController>() != null)
-			{
-				collider.GetComponent<EnemyController>().Damage(damage);
-			}
+			DispatchGroundHazardPlacementRequestEvent(projectile, transform.position);
 		}
-		if (reflectionsLeft <= 0) Destroy(gameObject);
+		else
+		{
+			AOEDamageDealer.DealAOEDamage(damage);
+			DispatchElementContactParticleRequestEvent(AOEDamageDealer.EnemyPositionsNearPointWithCurrentAOE(transform.position));
+		}
+	}
+
+	private void DispatchGroundHazardPlacementRequestEvent(Projectile projectile, Vector3 position)
+	{
+		CodeControl.Message.Send(new GroundHazardPlacementRequestEvent(projectile, position));
+	}
+
+	private void DispatchEnemyDamageRequestEvent(EnemyController enemy, float damageAmount)
+	{
+		CodeControl.Message.Send(new EnemyDamageRequestEvent(enemy, damageAmount));
+	}
+
+	private void DispatchElementContactParticleRequestEvent(Vector3 placement)
+	{
+		CodeControl.Message.Send(new ElementalContactParticleRequestEvent(projectile.elements.Peek(), placement));
+	}
+
+	private void DispatchElementContactParticleRequestEvent(Vector3[] placements)
+	{
+		CodeControl.Message.Send(new ElementalContactParticleRequestEvent(projectile.elements.Peek(), placements));
+	}
+
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.CompareTag("Obstacles") && primaryMovementType == ProjectileMovementType.BounceOnGround) Destroy(gameObject);
 	}
 }

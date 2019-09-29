@@ -1,5 +1,4 @@
-﻿
-public class ResourceChangeRequestEvent : CodeControl.Message
+﻿public class ResourceChangeRequestEvent : CodeControl.Message
 {
 	public int amount;
 

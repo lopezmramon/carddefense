@@ -21,8 +21,7 @@ public class TimeManager : MonoBehaviour
 
 	private void OnHurryNextWaveRequested(HurryNextWaveRequestEvent obj)
 	{
-		betweenWaves = false;
-		timeBetweenWaves = baseTimeBetweenWaves;
+		timeBetweenWaves = 0;
 	}
 
 	private void OnWaveFinished(WaveFinishedEvent obj)
@@ -41,12 +40,11 @@ public class TimeManager : MonoBehaviour
 	{
 		if (timeBetweenWaves >= 0 && betweenWaves && inGameplay)
 		{
-			timeBetweenWaves -= Time.deltaTime;
+			timeBetweenWaves -= Time.deltaTime * GameManager.gameSpeedMultiplier;
 		}
-
 		if (timeBetweenEnemies >= 0 && !betweenWaves && inGameplay)
 		{
-			timeBetweenEnemies -= Time.deltaTime;
+			timeBetweenEnemies -= Time.deltaTime * GameManager.gameSpeedMultiplier;
 		}
 		else if (!betweenWaves && inGameplay)
 		{

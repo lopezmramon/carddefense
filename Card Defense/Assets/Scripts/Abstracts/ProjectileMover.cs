@@ -1,86 +1,99 @@
 ﻿using System;
 using UnityEngine;
 
-public class ProjectileMover 
+public class ProjectileMover
 {
 	public Transform projectile, target;
 	private Vector3 targetPos, startPos;
-	private float speed, initialXDistance;
-	
+	private float speed, aoeAtTowerTimer;
+	private Parabola[] parabolas;
+	private int currentParabolaIndex, currentPointInParabolaIndex;
+	public bool reassigning;
+
 	public ProjectileMover(Transform projectile, Transform target, float speed)
 	{
 		this.projectile = projectile;
 		this.target = target;
+		this.targetPos = target.position;
 		startPos = projectile.position;
-		initialXDistance = targetPos.x - startPos.x;
 		this.speed = speed;
 	}
 
-	public ProjectileMover(Transform projectile, Vector3 targetLocation, float speed)
+	public ProjectileMover(Transform projectile, Parabola[] parabolas, float speed)
 	{
 		this.projectile = projectile;
-		this.targetPos = targetLocation;
-		startPos = projectile.position;
-		initialXDistance = targetPos.x - startPos.x;
+		this.parabolas = parabolas;
 		this.speed = speed;
+		currentParabolaIndex = 0;
+		currentPointInParabolaIndex = 0;
 	}
 
-	public void UpdateStartAndTargetPositionForNextBounce()
+	public ProjectileMover(float timeBetweenAOEsAtTower)
 	{
-		startPos = targetPos;
-		targetPos.x += initialXDistance;
-		targetPos.y = projectile.position.y;
+		speed = timeBetweenAOEsAtTower;
+		aoeAtTowerTimer = speed;
 	}
 
-	public void BounceOnTargetPosition(Action<bool> onHit)
+	public void CheckAOEAtTowerTimer(Action OnAOEAtTowerActivation)
 	{
-		float x0 = startPos.x;
-		float x1 = targetPos.x;
-		float dist = x1 - x0;
-		float arcHeight = startPos.y + 1f;
-		float nextX = Mathf.MoveTowards(projectile.position.x, x1, speed * Time.deltaTime);
-		float baseY = Mathf.Lerp(startPos.y, targetPos.y, (nextX - x0) / dist);
-		float arc = arcHeight * (nextX - x0) * (nextX - x1) / (-0.25f * dist * dist);
-		Vector3 nextPos = new Vector3(nextX, baseY + arc, projectile.position.z);
-
-		// Rotate to face the next position, and then move there
-		projectile.rotation = LookAt2D(nextPos - projectile.position);
-		projectile.position = nextPos;
-
-		// Do something when we reach the target
-		if (nextPos == targetPos)
+		if(aoeAtTowerTimer <= Time.deltaTime)
 		{
-			UpdateStartAndTargetPositionForNextBounce();
-			onHit(true);
+			OnAOEAtTowerActivation();
+			aoeAtTowerTimer = speed;
+		}
+		else
+		{
+			aoeAtTowerTimer -= Time.deltaTime * GameManager.gameSpeedMultiplier;
+		}
+	}
+
+	public void BounceOnTargetPosition(Action<bool> OnHit)
+	{
+		Vector3 destination = parabolas[currentParabolaIndex].points[currentPointInParabolaIndex];
+		Vector3 projectilePosition = projectile.position;
+		Vector3 direction = destination - projectilePosition;
+		float distanceToTravel = speed * Time.deltaTime * GameManager.gameSpeedMultiplier;
+		if (direction.magnitude <= distanceToTravel)
+		{
+			currentPointInParabolaIndex++;
+			if(currentPointInParabolaIndex >= parabolas[currentParabolaIndex].points.Count)
+			{
+				OnHit(true);
+				currentParabolaIndex++;
+				currentPointInParabolaIndex = 0;
+				if(currentParabolaIndex >= parabolas.Length)
+				{
+					OnHit(false);
+				}
+			}
+		}
+		else
+		{
+			projectile.Translate(direction.normalized * distanceToTravel);
 		}
 	}
 
 	public void MoveStraightToAssignedTarget(Action<bool> OnHit)
 	{
-		if(target == null || !target.gameObject.activeInHierarchy)
+		if (reassigning) return;
+		if (target == null || !target.gameObject.activeInHierarchy)
 		{
 			OnHit(false);
 		}
 		Vector3 projectilePosition = projectile.position;
 		Vector3 targetPosition = target == null ? targetPos : target.position;
 		Vector3 direction = targetPosition - projectilePosition;
-		float distanceToTravel = speed * Time.deltaTime;
-		if(direction.magnitude <= distanceToTravel)
+		float distanceToTravel = speed * Time.deltaTime * GameManager.gameSpeedMultiplier;
+		if (direction.magnitude <= distanceToTravel)
 		{
 			OnHit(true);
 		}
 		else
 		{
-			projectile.Translate(direction.normalized * distanceToTravel);	
+			projectile.Translate(direction.normalized * distanceToTravel);
 		}
 	}
 
-	/// 
-	/// This is a 2D version of Quaternion.LookAt; it returns a quaternion
-	/// that makes the local +X axis point in the given forward direction.
-	/// 
-	/// forward direction
-	/// Quaternion that rotates +X to align with forward
 	public static Quaternion LookAt2D(Vector2 forward)
 	{
 		return Quaternion.Euler(0, 0, Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg);

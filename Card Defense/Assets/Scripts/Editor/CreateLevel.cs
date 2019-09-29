@@ -4,7 +4,6 @@ using UnityEditor;
 using System.IO;
 public class CreateLevel
 {
-	[MenuItem("Assets/Create/Level")]
 	public static Level Create(string name, int mapWidth, int mapHeight)
 	{
 		Level asset = ScriptableObject.CreateInstance<Level>();

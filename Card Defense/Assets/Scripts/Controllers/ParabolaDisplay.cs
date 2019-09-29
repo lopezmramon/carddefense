@@ -58,7 +58,7 @@ public class ParabolaDisplay : MonoBehaviour
 
 	private void OnMouseEnter()
 	{
-		CodeControl.Message.Send(new DisplayParabolaRequestEvent(transform.position, targetPos, speed, arcHeight, 0.95f, numberOfBounces));
+		CodeControl.Message.Send(new DisplayParabolaRequestEvent(transform, targetPos, speed, arcHeight, 0.95f, numberOfBounces));
 	}
 
 	private void OnMouseExit()

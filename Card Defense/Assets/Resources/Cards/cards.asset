@@ -18,7 +18,12 @@ MonoBehaviour:
     element: 0
     description: This card is on fire
     cost: 100
-    time: 1
+    duration: 1
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifiers: 00000000
+    handModifierValues: 00000000
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_09
     resourceFileName: Arrow_01
@@ -30,7 +35,12 @@ MonoBehaviour:
     element: 4
     description: This card is on Ice forreal
     cost: 100
-    time: 1
+    duration: 1
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifiers: 00000000
+    handModifierValues: 00000000
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_08
     resourceFileName: Arrow_01
@@ -42,7 +52,12 @@ MonoBehaviour:
     element: 1
     description: Watery AF
     cost: 100
-    time: 1
+    duration: 1
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifiers: 00000000
+    handModifierValues: 00000000
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_05
     resourceFileName: Arrow_01
@@ -54,7 +69,12 @@ MonoBehaviour:
     element: 2
     description: Mud fired
     cost: 100
-    time: 1
+    duration: 1
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifiers: 00000000
+    handModifierValues: 00000000
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_13
     resourceFileName: Arrow_01
@@ -66,7 +86,12 @@ MonoBehaviour:
     element: 3
     description: Blows you away with power
     cost: 100
-    time: 1
+    duration: 1
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifiers: 00000000
+    handModifierValues: 00000000
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_11
     resourceFileName: Arrow_01
@@ -78,9 +103,83 @@ MonoBehaviour:
     element: 5
     description: ZAP!
     cost: 100
-    time: 1
+    duration: 1
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifiers: 00000000
+    handModifierValues: 00000000
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_12
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: QuickFire 1
+    cardType: 1
+    element: 6
+    description: Increases fire rate by 30% for 3 seconds
+    cost: 30
+    duration: 3
+    propertyModifiers: 0100000002000000
+    propertyModifierValues:
+    - 30
+    - 30
+    handModifiers: 00000000
+    handModifierValues: 00000000
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_16
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: QuickFire 2
+    cardType: 1
+    element: 6
+    description: Increases fire rate by 60% for 3 seconds
+    cost: 60
+    duration: 3
+    propertyModifiers: 01000000
+    propertyModifierValues:
+    - 60
+    handModifiers: 00000000
+    handModifierValues: 00000000
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_17
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Redraw 1
+    cardType: 2
+    element: 6
+    description: Discards 3 random cards from your hand and then draws 3 new cards
+    cost: 25
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifiers: 01000000
+    handModifierValues: 03000000
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_01
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Sell 1
+    cardType: 2
+    element: 6
+    description: Sell Any amount of cards for 50 each
+    cost: 50
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifiers: 06000000
+    handModifierValues: 00000000
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_03
     resourceFileName: Arrow_01
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}

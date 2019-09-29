@@ -12,6 +12,12 @@ public class CardContainer : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 	private Transform originalParent;
 	public Card card;
 	private bool followMouse = false;
+	private Vector3 offset;
+	public bool pickingCards;
+	public void ToggleCardPicking(bool pickingCards)
+	{
+		this.pickingCards = pickingCards;
+	}
 
 	public void Initialize(Card card)
 	{
@@ -32,40 +38,61 @@ public class CardContainer : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
-		StartFollowingMouseCursor();
-		DispatchCardGrabbedEvent();
-		background.raycastTarget = false;
-		raycastTarget.raycastTarget = false;
+		AnalyzePointerDown(eventData);
+	}
+
+	private void AnalyzePointerDown(PointerEventData eventData)
+	{
+		if (pickingCards)
+		{
+			DispatchCardPickedEvent();
+		}
+		else
+		{
+			StartFollowingMouseCursor();
+			DispatchCardGrabbedEvent();
+			background.raycastTarget = false;
+			raycastTarget.raycastTarget = false;
+		}
 	}
 
 	public void OnPointerUp(PointerEventData eventData)
 	{
-		AnalyzeMouseUp(eventData);
-		DispatchCardDroppedEvent();
-		background.raycastTarget = true;
-		raycastTarget.raycastTarget = true;
+		AnalyzePointerUp(eventData);
 	}
 
 	private void StartFollowingMouseCursor()
 	{
 		transform.localScale = Vector3.one / 2;
+		offset = transform.position - Input.mousePosition;
 		transform.SetParent(transform.root);
 		followMouse = true;
 	}
 
-	private void AnalyzeMouseUp(PointerEventData eventData)
+	private void AnalyzePointerUp(PointerEventData eventData)
 	{
-		followMouse = false;
-		transform.SetParent(originalParent);
-		transform.position = Vector3.zero;
-		transform.localScale = Vector3.one;
+		if (pickingCards)
+		{
+
+		}
+		else
+		{
+			bool overDrawer = eventData.pointerCurrentRaycast.gameObject != null && eventData.pointerCurrentRaycast.gameObject.name.Contains("Card");
+			DispatchCardDroppedEvent(overDrawer);
+			background.raycastTarget = true;
+			raycastTarget.raycastTarget = true;
+			followMouse = false;
+			transform.SetParent(originalParent);
+			transform.position = Vector3.zero;
+			transform.localScale = Vector3.one;
+		}
 	}
 
 	private void Update()
 	{
 		if (followMouse)
 		{
-			transform.position = Input.mousePosition;
+			transform.position = Input.mousePosition + offset / 2;
 		}
 	}
 
@@ -74,9 +101,13 @@ public class CardContainer : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		CodeControl.Message.Send(new CardGrabbedEvent(this));
 	}
 
-	private void DispatchCardDroppedEvent()
+	private void DispatchCardDroppedEvent(bool overDrawer)
 	{
-		CodeControl.Message.Send(new CardDroppedEvent(this));
+		CodeControl.Message.Send(new CardDroppedEvent(this, overDrawer));
 	}
 
+	private void DispatchCardPickedEvent()
+	{
+		CodeControl.Message.Send(new CardPickRequestEvent(this));
+	}
 }

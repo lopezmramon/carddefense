@@ -59,7 +59,7 @@ public class CardImporterFromWeb : Editor
 			CardData cardData = AssetDatabase.LoadAssetAtPath<CardData>(assetfile);
 			if (cardData == null)
 			{
-				cardData = new CardData();
+				cardData =(CardData) ScriptableObject.CreateInstance(typeof(CardData));
 				AssetDatabase.CreateAsset(cardData, assetfile);
 			}
 			cardData.cards = CSVSerializer.Deserialize<Card>(rows);
@@ -67,8 +67,6 @@ public class CardImporterFromWeb : Editor
 			AssetDatabase.SaveAssets();
 		}
 	}
-
-	// coroutine for unity editor
 
 	static void StartCoroutine(IEnumerator routine)
 	{

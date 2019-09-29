@@ -57,6 +57,7 @@ public class TileManager : MonoBehaviour
 
 	private void ActivateVFX(TileController tileHovered, Element element)
 	{
+		if (element == Element.None) return;
 		tileHovered.ColorMaterial(VFXColors[(int)element]);
 	}
 
