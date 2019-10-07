@@ -12,13 +12,16 @@ public class CardManager : MonoBehaviour
 	public Transform cardContainerPoolParent, hand, pickedCardsDisplayLocation;
 	private CardContainer grabbedCard;
 	private HandModifierAnalyzer handModifierAnalyzer;
+	private ExtraCardAnalyzer extraCardAnalyzer;
 	private HashSet<CardContainer> pickedCards = new HashSet<CardContainer>();
 	private int cardsToPick;
+	private bool unrestricted;
 
 	private void Awake()
 	{
 		spriteLoader = new CardSpriteLoader();
 		handModifierAnalyzer = new HandModifierAnalyzer();
+		extraCardAnalyzer = new ExtraCardAnalyzer();
 		spriteLoader.LoadSpritesForCards(cardData.cards, OnLoadFinished);
 		CodeControl.Message.AddListener<CardGrabbedEvent>(OnCardGrabbed);
 		CodeControl.Message.AddListener<CardsConsumeRequestEvent>(OnCardsConsumeRequested);
@@ -32,7 +35,8 @@ public class CardManager : MonoBehaviour
 
 	private void OnCardSellProcessBeginRequested(CardSellProcessBeginRequestEvent obj)
 	{
-		DispatchCardPickStartedEvent(0);
+		StartPickingCards(0);
+		unrestricted = true;
 	}
 
 	private void OnPickedCardsConfirmed(ConfirmCardsPickedRequestEvent obj)
@@ -40,17 +44,13 @@ public class CardManager : MonoBehaviour
 		handModifierAnalyzer.FinalizeHandModifierOperation(pickedCards);
 		pickedCards.Clear();
 		cardsToPick = 0;
+		unrestricted = false;
 		DispatchCardPickEndEvent();
 	}
 
 	private void OnCardPickStartRequested(CardPickStartRequestEvent obj)
 	{
-		cardsToPick = obj.amount;
-		if (cardsToPick > hand.childCount)
-		{
-			cardsToPick = hand.childCount;
-		}
-		DispatchCardPickStartedEvent(cardsToPick);
+		StartPickingCards(obj.amount);
 	}
 
 	private void OnCardPickRequested(CardPickRequestEvent obj)
@@ -66,9 +66,12 @@ public class CardManager : MonoBehaviour
 	private void OnCardDropped(CardDroppedEvent obj)
 	{
 		Card card = obj.card.card;
-		if (card.cardType != CardType.HandModifier || card.cost > ResourceManager.currentResourceAmount || obj.overDrawer) return;
-		handModifierAnalyzer.AnalyzeModifiers(card.handModifiers, card.handModifierValues);
+		if (card.cost > ResourceManager.currentResourceAmount || obj.overDrawer || card.propertyModifiers[0] != PropertyModifier.None) return;
 		ConsumeCard(obj.card);
+		if (card.cardType == CardType.HandModifier)
+			handModifierAnalyzer.AnalyzeModifiers(card.handModifier, card.handModifierValue);
+		if (card.cardType == CardType.Extra)
+			extraCardAnalyzer.AnalyzeExtraCard(card);
 		DispatchResourceChangeRequestEvent(card.cost);
 	}
 
@@ -93,6 +96,17 @@ public class CardManager : MonoBehaviour
 		}
 	}
 
+	private void StartPickingCards(int amount)
+	{
+		if (hand.childCount == 0) return;
+		cardsToPick = amount;
+		if (cardsToPick > hand.childCount)
+		{
+			cardsToPick = hand.childCount;
+		}
+		DispatchCardPickStartedEvent(cardsToPick, handModifierAnalyzer.currentHandModifier, handModifierAnalyzer.currentHandModifierValue);
+	}
+
 	private void CheckPickedCards(CardContainer card)
 	{
 		if (pickedCards.Contains(card))
@@ -108,7 +122,7 @@ public class CardManager : MonoBehaviour
 	private void PresentCard(CardContainer card)
 	{
 		int cardsLeftToPick = cardsToPick - pickedCards.Count;
-		if (cardsLeftToPick > 0)
+		if (cardsLeftToPick > 0 || unrestricted)
 		{
 			card.transform.SetParent(pickedCardsDisplayLocation);
 			pickedCards.Add(card);
@@ -150,7 +164,7 @@ public class CardManager : MonoBehaviour
 
 	private void ConsumeCard(CardContainer card)
 	{
-		Destroy(card.gameObject);
+		card.Discard();
 		DispatchCardConsumedEvent(card);
 	}
 
@@ -164,7 +178,7 @@ public class CardManager : MonoBehaviour
 
 	private void DispatchCardPickedEvent(CardContainer card, bool picked, int amountLeft)
 	{
-		CodeControl.Message.Send(new CardPickedEvent(card, picked, amountLeft));
+		CodeControl.Message.Send(new CardPickedEvent(card, picked, amountLeft, pickedCards.Count));
 	}
 
 	private void DispatchCardPickEndEvent()
@@ -192,8 +206,8 @@ public class CardManager : MonoBehaviour
 		CodeControl.Message.Send(new ResourceChangeRequestEvent(amount));
 	}
 
-	private void DispatchCardPickStartedEvent(int cardsToPick)
+	private void DispatchCardPickStartedEvent(int cardsToPick, HandModifier handModifier, float value)
 	{
-		CodeControl.Message.Send(new CardPickStartedEvent(cardsToPick));
+		CodeControl.Message.Send(new CardPickStartedEvent(cardsToPick, handModifier, value));
 	}
 }

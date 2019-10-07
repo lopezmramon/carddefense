@@ -2,13 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class ParticleManager : MonoBehaviour
 {
 	public GameObject[] elementalChargeParticlePrefabs,
 		elementalContactParticlePrefabs,
-		elementalMuzzleParticlePrefabs;
-	private GameObject temporaryChargeParticle;
+		elementalMuzzleParticlePrefabs,
+		propertyModifierParticlePrefabs;
+	private List<GameObject> temporaryParticles = new List<GameObject>();
 	private Dictionary<TowerController, OrbitGroup> orbitGroups = new Dictionary<TowerController, OrbitGroup>();
 	[Header("Elemental Charge Properties")]
 	public float radius;
@@ -22,6 +24,18 @@ public class ParticleManager : MonoBehaviour
 		CodeControl.Message.AddListener<TowerSoldEvent>(OnTowerSold);
 		CodeControl.Message.AddListener<ElementalContactParticleRequestEvent>(OnElementalContactParticleRequested);
 		CodeControl.Message.AddListener<ElementalMuzzleParticleRequestEvent>(OnElementalMuzzleParticleRequested);
+		CodeControl.Message.AddListener<SimulateTowerModifierRequestEvent>(OnTowerModifierSimulateRequested);
+		CodeControl.Message.AddListener<TowerModifierAppliedEvent>(OnTowerModifierApplied);
+	}
+
+	private void OnTowerModifierApplied(TowerModifierAppliedEvent obj)
+	{
+		DestroyTemporaryParticlesAfterDuration(obj.duration);
+	}
+
+	private void OnTowerModifierSimulateRequested(SimulateTowerModifierRequestEvent obj)
+	{
+		PlaceModifierParticle(obj.tower, obj.propertyModifiers);
 	}
 
 	private void OnElementalMuzzleParticleRequested(ElementalMuzzleParticleRequestEvent obj)
@@ -36,7 +50,7 @@ public class ParticleManager : MonoBehaviour
 
 	private void OnCardNoLongerOverTile(CardNoLongerOverTileEvent obj)
 	{
-		if (temporaryChargeParticle != null) Destroy(temporaryChargeParticle);
+		DestroyTemporaryParticles();
 	}
 
 	private void OnTowerSold(TowerSoldEvent obj)
@@ -46,7 +60,7 @@ public class ParticleManager : MonoBehaviour
 
 	private void OnTowerUpgraded(TowerUpgradedEvent obj)
 	{
-		temporaryChargeParticle = null;
+		temporaryParticles.Clear();
 	}
 
 	private void OnUpgradeSimulateRequested(SimulateUpgradeRequestEvent obj)
@@ -64,6 +78,18 @@ public class ParticleManager : MonoBehaviour
 		}
 	}
 
+	private void PlaceModifierParticle(TowerController tower, PropertyModifier[] propertyModifiers)
+	{
+		if (propertyModifiers[0] == PropertyModifier.None) return;
+		GameObject temporaryParticle = Instantiate(propertyModifierParticlePrefabs[(int)propertyModifiers[0]], tower.transform);
+		temporaryParticles.Add(temporaryParticle);
+		ParticleSystem ps = temporaryParticle.GetComponent<ParticleSystem>();
+		ShapeModule shape = ps.shape;
+		MeshRenderer targetMesh = PropertyModifierHelper.FindCorrectMeshRendererForProperty(tower, propertyModifiers);			
+		shape.meshRenderer = targetMesh;
+	}
+
+
 	private void GenerateElementalCharge(TowerController tower, Element element)
 	{
 		if (!orbitGroups.ContainsKey(tower))
@@ -71,7 +97,7 @@ public class ParticleManager : MonoBehaviour
 			orbitGroups.Add(tower, new OrbitGroup());
 		}
 		ChargeParticleController chargeParticleController = Instantiate(elementalChargeParticlePrefabs[(int)element]).GetComponent<ChargeParticleController>();
-		temporaryChargeParticle = chargeParticleController.gameObject;
+		temporaryParticles.Add(chargeParticleController.gameObject);
 		OrbitMovement particleOrbit = orbitGroups[tower].AddOrbitMovement(
 			chargeParticleController.transform, tower.chargeRotationCenter,
 			radius, radiusSpeed, rotationSpeed, tower.elements.Peek());
@@ -84,4 +110,17 @@ public class ParticleManager : MonoBehaviour
 		muzzleParticleController.Initialize(firingFrequency);
 	}
 
+	private void DestroyTemporaryParticlesAfterDuration(float duration)
+	{
+		foreach (GameObject particle in temporaryParticles)
+		{
+			Destroy(particle, duration);
+		}
+		temporaryParticles.Clear();
+	}
+
+	private void DestroyTemporaryParticles()
+	{
+		DestroyTemporaryParticlesAfterDuration(0);
+	}
 }

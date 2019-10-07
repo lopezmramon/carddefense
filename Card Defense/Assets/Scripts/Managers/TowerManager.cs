@@ -60,6 +60,7 @@ public class TowerManager : MonoBehaviour
 	private void OnCardDropped(CardDroppedEvent obj)
 	{
 		if (hoverTile == null || cardOverTile == null) return;
+
 		if (cardOverTile.card.cardType == CardType.Tower)
 		{
 			if (ResourceManager.currentResourceAmount >= cardOverTile.card.cost)
@@ -75,6 +76,7 @@ public class TowerManager : MonoBehaviour
 		}
 		else if (cardOverTile.card.cardType == CardType.PropertyModifier)
 		{
+			if (!towersPlaced.ContainsKey(hoverTile)) return;
 			if (ResourceManager.currentResourceAmount >= cardOverTile.card.cost)
 			{
 				AddMultipliers(hoverTile, cardOverTile.card.propertyModifiers, cardOverTile.card.propertyModifierValues, cardOverTile.card.duration);
@@ -124,25 +126,30 @@ public class TowerManager : MonoBehaviour
 	private void AddMultipliers(Tile hoverTile, PropertyModifier[] propertyModifiers, float[] propertyModifierValues, float duration)
 	{
 		TowerController tower = towersPlaced[hoverTile];
-		if (tower == null) return;
+		if (tower == null)
+		{
+			towersPlaced.Remove(hoverTile);
+			return;
+		}
 		for (int i = 0; i < propertyModifiers.Length; i++)
 		{
 			switch (propertyModifiers[i])
 			{
 				case PropertyModifier.Damage:
-					tower.AddProjectileDamageMultiplier(propertyModifierValues[i] / 100, duration);
+					tower.propertyModifierHandler.AddProjectileDamageMultiplier(propertyModifierValues[i] / 100, duration);
 					break;
 				case PropertyModifier.FireRate:
-					tower.AddFireRateMultiplier(propertyModifierValues[i] / 100, duration);
+					tower.propertyModifierHandler.AddFireRateMultiplier(propertyModifierValues[i] / 100, duration);
 					break;
 				case PropertyModifier.AOE:
-					tower.AddAOEMultiplier(propertyModifierValues[i] / 100, duration);
+					tower.propertyModifierHandler.AddAOEMultiplier(propertyModifierValues[i] / 100, duration);
 					break;
 				case PropertyModifier.Range:
-					tower.AddProjectileSpeedMultiplier(propertyModifierValues[i] / 100, duration);
+					tower.propertyModifierHandler.AddProjectileSpeedMultiplier(propertyModifierValues[i] / 100, duration);
 					break;
 			}
 		}
+		DispatchPropertyModifiersAppliedEvent(propertyModifiers, duration);
 	}
 
 	private void SimulateModifier(TowerController towerController, Card card)
@@ -251,5 +258,10 @@ public class TowerManager : MonoBehaviour
 	private void DispatchTowerSoldEvent(TowerController tower)
 	{
 		CodeControl.Message.Send(new TowerSoldEvent(tower));
+	}
+
+	private void DispatchPropertyModifiersAppliedEvent(PropertyModifier[] propertyModifiers, float duration)
+	{
+		CodeControl.Message.Send(new TowerModifierAppliedEvent(duration, propertyModifiers));
 	}
 }

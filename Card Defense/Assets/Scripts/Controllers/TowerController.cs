@@ -11,6 +11,9 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 	public Material[] buildMaterials;
 	private Material finalMaterial;
 	public Renderer[] renderers;
+	public MeshRenderer TowerBaseRenderer => Array.Find(renderers, (x) => x.name.Contains("Base")) as MeshRenderer;
+	public MeshRenderer TowerTurretRenderer => Array.Find(renderers, (x) => x.name.Contains("Turret") || x.name.Contains("Crystal")) as MeshRenderer;
+	public MeshRenderer TowerBarrelRenderer => Array.Find(renderers, (x) => x.name.Contains("Barrel") || x.name.Contains("Crystal")) as MeshRenderer;
 	public Transform projectileOrigin, rotatingPart, target, chargeRotationCenter;
 	public TowerTargetController targetController;
 	public TowerTargetController targetControllerPrefab;
@@ -18,25 +21,12 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 	private TowerTargeting towerTargeting;
 	private Animator animator;
 	private bool building = false;
-	private float fireRateMultiplier = 1f, rangeMultiplier = 1f, projectileDamageMultiplier = 1f, projectileAOEMultiplier = 1f;
-	public float fireRateMultiplierTimer, rangeMultiplierTimer, projectileDamageMultiplierTimer, projectileAOEMultiplierTimer;
-	private bool inWave;
+	public PropertyModifierHandler propertyModifierHandler;
 
 	private void Awake()
 	{
 		animator = GetComponent<Animator>();
-		CodeControl.Message.AddListener<WaveStartedEvent>(OnWaveStarted);
-		CodeControl.Message.AddListener<WaveFinishedEvent>(OnWaveFinished);
-	}
-
-	private void OnWaveFinished(WaveFinishedEvent obj)
-	{
-		inWave = false;
-	}
-
-	private void OnWaveStarted(WaveStartedEvent obj)
-	{
-		inWave = true;
+		propertyModifierHandler = new PropertyModifierHandler();
 	}
 
 	private void SetupTargeting()
@@ -75,10 +65,11 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 			DetectEnemies();
 		}
 		LookAtTarget();
-		Countdowns();		
+		ShootingCountdown();
+		propertyModifierHandler.PropertyCountdowns();		
 	}
 
-	private void Countdowns()
+	private void ShootingCountdown()
 	{
 		if (fireCountdown >= 0)
 		{
@@ -86,59 +77,8 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 		}
 		else
 		{
-			fireCountdown = 1f / (fireRate * fireRateMultiplier);
+			fireCountdown = 1f / (fireRate * propertyModifierHandler.fireRateMultiplier);
 			FireProjectileAtTarget();
-		}
-		if (fireRateMultiplierTimer >= 0)
-		{
-			fireRateMultiplierTimer -= Time.deltaTime * GameManager.gameSpeedMultiplier;
-		}
-		else
-		{
-			PropertyReset(PropertyModifier.FireRate);
-		}
-		if (projectileDamageMultiplierTimer >= 0)
-		{
-			projectileDamageMultiplierTimer -= Time.deltaTime * GameManager.gameSpeedMultiplier;
-		}
-		else
-		{
-			PropertyReset(PropertyModifier.Damage);
-		}
-		if (projectileAOEMultiplierTimer >= 0)
-		{
-			projectileAOEMultiplierTimer -= Time.deltaTime * GameManager.gameSpeedMultiplier;
-		}
-		else
-		{
-			PropertyReset(PropertyModifier.AOE);
-		}
-		if (rangeMultiplierTimer >= 0)
-		{
-			rangeMultiplierTimer -= Time.deltaTime * GameManager.gameSpeedMultiplier;
-		}
-		else
-		{
-			PropertyReset(PropertyModifier.Range);
-		}
-	}
-
-	private void PropertyReset(PropertyModifier propertyModifier)
-	{
-		switch (propertyModifier)
-		{
-			case PropertyModifier.Damage:
-				projectileDamageMultiplier = 1;
-				break;
-			case PropertyModifier.FireRate:
-				fireRateMultiplier = 1;
-				break;
-			case PropertyModifier.AOE:
-				projectileAOEMultiplier = 1;
-				break;
-			case PropertyModifier.Range:
-				rangeMultiplier = 1;
-				break;
 		}
 	}
 
@@ -284,31 +224,7 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 			renderer.material = dissolveControlMaterial;
 		}
 		building = true;
-	}
-
-	public void AddProjectileDamageMultiplier(float increase, float duration)
-	{
-		projectileDamageMultiplier += increase;
-		projectileDamageMultiplierTimer += duration;
-	}
-
-	public void AddProjectileSpeedMultiplier(float increase, float duration)
-	{
-		rangeMultiplier += increase;
-		rangeMultiplierTimer += duration;
-	}
-
-	public void AddFireRateMultiplier(float increase, float duration)
-	{
-		fireRateMultiplier += increase;
-		fireRateMultiplierTimer += duration;
-	}
-
-	public void AddAOEMultiplier(float increase, float duration)
-	{
-		projectileAOEMultiplier += increase;
-		projectileAOEMultiplierTimer += duration;
-	}
+	}	
 
 	internal void Upgrade(Element element)
 	{
@@ -365,7 +281,7 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 	private void DispatchShootProjectileRequestEvent(Transform target)
 	{
 		Transform projectileTarget = towerTargeting == TowerTargeting.Direct ? target : towerTargeting == TowerTargeting.Ground ? targetController.transform : null;
-		Projectile projectile = new Projectile(projectileDamageMultiplier, rangeMultiplier, projectileAOEMultiplier, elements, target);
+		Projectile projectile = new Projectile(propertyModifierHandler.projectileDamageMultiplier, propertyModifierHandler.rangeMultiplier, propertyModifierHandler.projectileAOEMultiplier, elements, target);
 		CodeControl.Message.Send(new ShootProjectileRequestEvent(projectile, projectileOrigin));
 		if (towerTargeting != TowerTargeting.NoTarget)
 		{
@@ -375,7 +291,7 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 
 	private void DispatchElementalMuzzleParticleRequestEvent()
 	{
-		CodeControl.Message.Send(new ElementalMuzzleParticleRequestEvent(elements.Peek(), projectileOrigin, fireRate * fireRateMultiplier));
+		CodeControl.Message.Send(new ElementalMuzzleParticleRequestEvent(elements.Peek(), projectileOrigin, fireRate * propertyModifierHandler.fireRateMultiplier));
 	}
 
 	private void OnDrawGizmosSelected()

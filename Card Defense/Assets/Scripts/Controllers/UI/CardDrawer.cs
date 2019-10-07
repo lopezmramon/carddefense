@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CardDrawer : MonoBehaviour
@@ -17,11 +18,17 @@ public class CardDrawer : MonoBehaviour
 		CodeControl.Message.AddListener<CardConsumedEvent>(OnCardConsumed);
 		CodeControl.Message.AddListener<EmptyHandRequestEvent>(OnEmptyHandRequested);
 		CodeControl.Message.AddListener<RedrawHandRequestEvent>(OnRedrawHandRequested);
-		CodeControl.Message.AddListener<CardPickStartRequestEvent>(OnCardPickStartRequested);
+		CodeControl.Message.AddListener<RedrawRandomCardsRequestEvent>(OnRedrawRandomCardsRequestedd);
+		CodeControl.Message.AddListener<CardPickStartedEvent>(OnCardPickStarted);
 		CodeControl.Message.AddListener<CardPickEndedEvent>(OnCardPickEnded);
 	}
 
-	private void OnCardPickStartRequested(CardPickStartRequestEvent obj)
+	private void OnRedrawRandomCardsRequestedd(RedrawRandomCardsRequestEvent obj)
+	{
+		RedrawRandomCards(obj.amount);
+	}
+
+	private void OnCardPickStarted(CardPickStartedEvent obj)
 	{
 		foreach (CardContainer cardContainer in hand)
 		{
@@ -39,6 +46,7 @@ public class CardDrawer : MonoBehaviour
 
 	private void OnCardConsumed(CardConsumedEvent obj)
 	{
+		if(hand.Contains(obj.consumedCard))
 		hand.Remove(obj.consumedCard);
 	}
 
@@ -64,11 +72,24 @@ public class CardDrawer : MonoBehaviour
 		DispatchDrawRandomCardsRequestEvent(currentHandSize);
 	}
 
+	private void RedrawRandomCards(int amount)
+	{
+		if (amount > transform.childCount) amount = transform.childCount;
+		CardContainer[] cardsToRedraw = new CardContainer[amount];
+		cardsToRedraw = hand.OrderBy(x => Guid.NewGuid()).Take(amount).ToArray();
+		for(int i = 0; i < cardsToRedraw.Length; i++)
+		{
+			cardsToRedraw[i].Discard();
+			hand.Remove(cardsToRedraw[i]);
+		}
+		DispatchDrawRandomCardsRequestEvent(amount);
+	}
+
 	private void EmptyHand()
 	{
 		foreach (CardContainer cardContainer in hand)
 		{
-			Destroy(cardContainer.gameObject);
+			cardContainer.Discard();
 		}
 		hand.Clear();
 	}

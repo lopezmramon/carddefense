@@ -10,8 +10,10 @@ public class Card
 	public float duration;
 	public PropertyModifier[] propertyModifiers;
 	public float[] propertyModifierValues;
-	public HandModifier[] handModifiers;
-	public int[] handModifierValues;
+	public HandModifier handModifier;
+	public int handModifierValue;
+	public ExtraModifier extraModifier;
+	public int extraModifierValue;
 	public string backgroundFileName, illustrationFileName, resourceFileName;
 	public Sprite backgroundSprite, illustrationSprite, resourceSprite;
 

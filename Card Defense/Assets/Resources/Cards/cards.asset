@@ -22,8 +22,10 @@ MonoBehaviour:
     propertyModifiers: 00000000
     propertyModifierValues:
     - 0
-    handModifiers: 00000000
-    handModifierValues: 00000000
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_09
     resourceFileName: Arrow_01
@@ -39,8 +41,10 @@ MonoBehaviour:
     propertyModifiers: 00000000
     propertyModifierValues:
     - 0
-    handModifiers: 00000000
-    handModifierValues: 00000000
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_08
     resourceFileName: Arrow_01
@@ -56,8 +60,10 @@ MonoBehaviour:
     propertyModifiers: 00000000
     propertyModifierValues:
     - 0
-    handModifiers: 00000000
-    handModifierValues: 00000000
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_05
     resourceFileName: Arrow_01
@@ -73,8 +79,10 @@ MonoBehaviour:
     propertyModifiers: 00000000
     propertyModifierValues:
     - 0
-    handModifiers: 00000000
-    handModifierValues: 00000000
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_13
     resourceFileName: Arrow_01
@@ -90,8 +98,10 @@ MonoBehaviour:
     propertyModifiers: 00000000
     propertyModifierValues:
     - 0
-    handModifiers: 00000000
-    handModifierValues: 00000000
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_11
     resourceFileName: Arrow_01
@@ -107,8 +117,10 @@ MonoBehaviour:
     propertyModifiers: 00000000
     propertyModifierValues:
     - 0
-    handModifiers: 00000000
-    handModifierValues: 00000000
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_12
     resourceFileName: Arrow_01
@@ -121,12 +133,13 @@ MonoBehaviour:
     description: Increases fire rate by 30% for 3 seconds
     cost: 30
     duration: 3
-    propertyModifiers: 0100000002000000
+    propertyModifiers: 01000000
     propertyModifierValues:
     - 30
-    - 30
-    handModifiers: 00000000
-    handModifierValues: 00000000
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_16
     resourceFileName: Arrow_01
@@ -142,8 +155,124 @@ MonoBehaviour:
     propertyModifiers: 01000000
     propertyModifierValues:
     - 60
-    handModifiers: 00000000
-    handModifierValues: 00000000
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_17
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Range 1
+    cardType: 1
+    element: 6
+    description: Increases tower's range by 30% for 3 seconds
+    cost: 30
+    duration: 3
+    propertyModifiers: 04000000
+    propertyModifierValues:
+    - 30
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_17
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Range 2
+    cardType: 1
+    element: 6
+    description: Increases tower's range by 30% for 3 seconds
+    cost: 60
+    duration: 3
+    propertyModifiers: 04000000
+    propertyModifierValues:
+    - 60
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_17
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Damage 1
+    cardType: 1
+    element: 6
+    description: Increases tower's damage by 30% for 3 seconds
+    cost: 30
+    duration: 3
+    propertyModifiers: 02000000
+    propertyModifierValues:
+    - 30
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_17
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Damage 2
+    cardType: 1
+    element: 6
+    description: Increases tower's damage by 60% for 3 seconds
+    cost: 60
+    duration: 3
+    propertyModifiers: 02000000
+    propertyModifierValues:
+    - 60
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_17
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: AOE 1
+    cardType: 1
+    element: 6
+    description: Increases tower's projectile's AOE by 30% for 3 seconds
+    cost: 30
+    duration: 3
+    propertyModifiers: 03000000
+    propertyModifierValues:
+    - 30
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_17
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: AOE 2
+    cardType: 1
+    element: 6
+    description: Increases tower's projectile's AOE by 60% for 3 seconds
+    cost: 60
+    duration: 3
+    propertyModifiers: 03000000
+    propertyModifierValues:
+    - 60
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_17
     resourceFileName: Arrow_01
@@ -153,14 +282,35 @@ MonoBehaviour:
   - name: Redraw 1
     cardType: 2
     element: 6
-    description: Discards 3 random cards from your hand and then draws 3 new cards
-    cost: 25
+    description: Choose 2 cards from your hand, discard them and then draw 2 new cards
+    cost: 50
     duration: 0
     propertyModifiers: 00000000
     propertyModifierValues:
     - 0
-    handModifiers: 01000000
-    handModifierValues: 03000000
+    handModifier: 1
+    handModifierValue: 2
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_01
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Redraw 2
+    cardType: 2
+    element: 6
+    description: Choose 4 cards from your hand, discard them and then draw 4 new cards
+    cost: 75
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 1
+    handModifierValue: 4
+    extraModifier: 3
+    extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_01
     resourceFileName: Arrow_01
@@ -170,16 +320,208 @@ MonoBehaviour:
   - name: Sell 1
     cardType: 2
     element: 6
+    description: Sell Any amount of cards for 25 each
+    cost: 50
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 6
+    handModifierValue: 25
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_03
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Sell 2
+    cardType: 2
+    element: 6
     description: Sell Any amount of cards for 50 each
     cost: 50
     duration: 0
     propertyModifiers: 00000000
     propertyModifierValues:
     - 0
-    handModifiers: 06000000
-    handModifierValues: 00000000
+    handModifier: 6
+    handModifierValue: 50
+    extraModifier: 3
+    extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_03
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: RedrawHand 1
+    cardType: 2
+    element: 6
+    description: Redraw your whole hand
+    cost: 50
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 2
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_04
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: RedrawHand 2
+    cardType: 2
+    element: 6
+    description: Redraw your whole hand
+    cost: 100
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 2
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_04
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Redraw Random Cards 1
+    cardType: 2
+    element: 6
+    description: Discards 2 random cards from your hand and then draws 2 new cards
+    cost: 50
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 4
+    handModifierValue: 2
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_20
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Redraw Random Cards 2
+    cardType: 2
+    element: 6
+    description: Discards 4 random cards from your hand and then draws 4 new cards
+    cost: 50
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 4
+    handModifierValue: 4
+    extraModifier: 3
+    extraModifierValue: 0
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_20
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Extra Life 1
+    cardType: 3
+    element: 6
+    description: Gives the player 1 extra life
+    cost: 50
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 0
+    extraModifierValue: 3
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_17
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Extra Life 2
+    cardType: 3
+    element: 6
+    description: Gives the player 3 extra lives
+    cost: 100
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 0
+    extraModifierValue: 1
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_17
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: ResourceChange 1
+    cardType: 3
+    element: 6
+    description: Instantly get 50 mana
+    cost: 0
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 7
+    handModifierValue: 50
+    extraModifier: 1
+    extraModifierValue: 50
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_15
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: ResourceChange 2
+    cardType: 3
+    element: 6
+    description: Instantly get 100 mana
+    cost: 0
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 7
+    handModifierValue: 100
+    extraModifier: 1
+    extraModifierValue: 100
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_15
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: ObtainedResource Increase 1
+    cardType: 3
+    element: 6
+    description: All resources obtained in the next 10 seconds are duplicated
+    cost: 100
+    duration: 10
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 7
+    handModifierValue: 100
+    extraModifier: 2
+    extraModifierValue: 2
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_15
     resourceFileName: Arrow_01
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}

@@ -96,6 +96,11 @@ public class CardContainer : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 		}
 	}
 
+	public void Discard()
+	{
+		Destroy(gameObject);
+	}
+
 	private void DispatchCardGrabbedEvent()
 	{
 		CodeControl.Message.Send(new CardGrabbedEvent(this));

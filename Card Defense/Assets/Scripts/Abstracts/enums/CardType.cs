@@ -5,5 +5,6 @@ public enum CardType
 {
 	Tower,
 	PropertyModifier,
-	HandModifier
+	HandModifier,
+	Extra
 }

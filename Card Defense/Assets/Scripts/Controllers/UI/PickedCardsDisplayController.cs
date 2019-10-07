@@ -7,6 +7,8 @@ public class PickedCardsDisplayController : MonoBehaviour
 	public Text neededCards, flavor;
 	public Button confirm;
 	private bool unrestricted;
+	private float value;
+	private HandModifier currentHandModifier;
 
 	private void Awake()
 	{
@@ -23,7 +25,10 @@ public class PickedCardsDisplayController : MonoBehaviour
 	private void OnCardPickStarted(CardPickStartedEvent obj)
 	{
 		ToggleVisualDisplay(true);
-		SetNeededCardsText(obj.amount);
+		value = obj.value;
+		currentHandModifier = obj.handModifier;
+		unrestricted = obj.unrestricted;
+		SetNeededCardsText(obj.maxAmount, 0);
 		SetFlavorText();
 	}
 
@@ -34,8 +39,8 @@ public class PickedCardsDisplayController : MonoBehaviour
 
 	private void OnCardPicked(CardPickedEvent obj)
 	{
-		SetNeededCardsText(obj.amountLeft);
-		confirm.interactable = obj.amountLeft <= 0;
+		SetNeededCardsText(obj.maxAmount, obj.amountPicked);
+		confirm.interactable = obj.maxAmount - obj.amountPicked <= 0 || unrestricted;
 	}
 
 	private void ToggleVisualDisplay(bool active)
@@ -49,9 +54,9 @@ public class PickedCardsDisplayController : MonoBehaviour
 	private void SetFlavorText()
 	{
 		string flavorText = string.Empty;
-		if (unrestricted)
+		if (currentHandModifier == HandModifier.Sell)
 		{
-			flavorText = "You can pick as many as you want";
+			flavorText = string.Format("Sell your cards for {0} each", value);
 		}
 		else
 		{
@@ -60,17 +65,30 @@ public class PickedCardsDisplayController : MonoBehaviour
 		flavor.text = flavorText;
 	}
 
-	private void SetNeededCardsText(int neededCards)
+	private void SetNeededCardsText(int maxAmount, int amountPicked)
 	{
 		string neededCardsText = string.Empty;
 		if (unrestricted)
 		{
-			neededCardsText = "Pick your cards";
+			if (amountPicked == 0)
+			{
+				neededCardsText = "Pick your cards";
+			}
+			else
+			{
+				if (currentHandModifier == HandModifier.Sell)
+				{
+					neededCardsText = string.Format("You have picked {0} cards", amountPicked);
+				}
+				{
+					neededCardsText = string.Format("You have picked {0} cards, for a total of {1} mana", amountPicked, amountPicked * value);
+				}
+			}
 		}
 		else
 		{
-			neededCardsText = string.Format("Select {0} more {1}", neededCards,
-				neededCards == 1 ? "card" : neededCards == 0 ? "Are you sure?" : "cards");
+			neededCardsText = string.Format("Select {0} more {1}", maxAmount,
+				maxAmount == 1 ? "card" : maxAmount == 0 ? "Are you sure?" : "cards");
 		}
 		this.neededCards.text = neededCardsText;
 	}

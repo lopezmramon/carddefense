@@ -5,35 +5,32 @@ using UnityEngine;
 
 public class HandModifierAnalyzer
 {
-	private HandModifier[] currentHandModifiers;
-	private int[] currentHandModifierValues;
-	public void AnalyzeModifiers(HandModifier[] handModifiers, int[] handModifierValues)
+	public HandModifier currentHandModifier;
+	public int currentHandModifierValue;
+	public void AnalyzeModifiers(HandModifier handModifier, int handModifierValue)
 	{
-		currentHandModifiers = handModifiers;
-		currentHandModifierValues = handModifierValues;
-		for (int i = 0; i < handModifiers.Length; i++)
+		currentHandModifier = handModifier;
+		currentHandModifierValue = handModifierValue;
+		switch (handModifier)
 		{
-			switch (handModifiers[i])
-			{
-				case HandModifier.DiscardRandomCards:
-					DispatchDiscardRandomCardsRequestEvent(handModifierValues[i]);
-					break;
-				case HandModifier.Draw:
-					DispatchDrawRandomCardsRequestEvent(handModifierValues[i]);
-					break;
-				case HandModifier.Redraw:
-					DispatchCardPickStartRequestEvent(handModifierValues[i]);
-					break;
-				case HandModifier.RedrawWholeHand:
-					DispatchRedrawHandRequestEvent();
-					break;
-				case HandModifier.ResourceChange:
-					DispatchResourceChangeRequestEvent(handModifierValues[i]);
-					break;
-				case HandModifier.Sell:
-					DispatchCardSellProcessBeginRequestEvent(handModifierValues[i]);
-					break;
-			}
+			case HandModifier.RedrawRandomCards:
+				DispatchRedrawRandomCardsRequestEvent(handModifierValue);
+				break;
+			case HandModifier.Draw:
+				DispatchDrawRandomCardsRequestEvent(handModifierValue);
+				break;
+			case HandModifier.Redraw:
+				DispatchCardPickStartRequestEvent(handModifierValue, handModifier);
+				break;
+			case HandModifier.RedrawHand:
+				DispatchRedrawHandRequestEvent();
+				break;
+			case HandModifier.ResourceChange:
+				DispatchResourceChangeRequestEvent(handModifierValue);
+				break;
+			case HandModifier.Sell:
+				DispatchCardSellProcessBeginRequestEvent(handModifierValue);
+				break;
 		}
 	}
 
@@ -42,26 +39,23 @@ public class HandModifierAnalyzer
 		if (pickedCards == null || pickedCards.Count == 0) return;
 		CardContainer[] cards = new CardContainer[pickedCards.Count];
 		pickedCards.CopyTo(cards);
-		for (int i = 0; i < currentHandModifiers.Length; i++)
+		switch (currentHandModifier)
 		{
-			switch (currentHandModifiers[i])
-			{
-				case HandModifier.DiscardRandomCards:
-					break;
-				case HandModifier.Draw:
-					break;
-				case HandModifier.Redraw:
-					DispatchCardsConsumeRequestEvent(cards);
-					DispatchDrawRandomCardsRequestEvent(cards.Length);
-					break;
-				case HandModifier.RedrawWholeHand:
-					break;
-				case HandModifier.ResourceChange:
-					break;
-				case HandModifier.Sell:
-					DispatchResourceChangeRequestEvent(pickedCards.Count * currentHandModifierValues[i]);
-					break;
-			}
+			case HandModifier.RedrawRandomCards:
+				break;
+			case HandModifier.Draw:
+				break;
+			case HandModifier.Redraw:
+				DispatchCardsConsumeRequestEvent(cards);
+				DispatchDrawRandomCardsRequestEvent(cards.Length);
+				break;
+			case HandModifier.RedrawHand:
+				break;
+			case HandModifier.ResourceChange:
+				break;
+			case HandModifier.Sell:
+				DispatchResourceChangeRequestEvent(pickedCards.Count * currentHandModifierValue);
+				break;
 		}
 		DispatchCardsConsumeRequestEvent(cards);
 	}
@@ -81,9 +75,9 @@ public class HandModifierAnalyzer
 		CodeControl.Message.Send(new RedrawHandRequestEvent());
 	}
 
-	private void DispatchCardPickStartRequestEvent(int amount)
+	private void DispatchCardPickStartRequestEvent(int amount, HandModifier handModifier)
 	{
-		CodeControl.Message.Send(new CardPickStartRequestEvent(amount));
+		CodeControl.Message.Send(new CardPickStartRequestEvent(amount, handModifier));
 	}
 
 	private void DispatchDrawRandomCardsRequestEvent(int amount)
@@ -91,9 +85,9 @@ public class HandModifierAnalyzer
 		CodeControl.Message.Send(new DrawRandomCardsRequestEvent(amount));
 	}
 
-	private void DispatchDiscardRandomCardsRequestEvent(int amount)
+	private void DispatchRedrawRandomCardsRequestEvent(int amount)
 	{
-		CodeControl.Message.Send(new DiscardRandomCardsRequestEvent(amount));
+		CodeControl.Message.Send(new RedrawRandomCardsRequestEvent(amount));
 	}
 
 	private void DispatchCardsConsumeRequestEvent(CardContainer[] cards)

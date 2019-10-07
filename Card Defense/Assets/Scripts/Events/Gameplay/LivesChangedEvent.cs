@@ -1,5 +1,4 @@
-﻿
-public class LivesChangedEvent : CodeControl.Message
+﻿public class LivesChangedEvent : CodeControl.Message
 {
 	public int totalLives;
 

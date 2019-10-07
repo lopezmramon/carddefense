@@ -5,9 +5,9 @@ public enum HandModifier
 {
 	None,
 	Redraw,
-	RedrawWholeHand,
+	RedrawHand,
 	Draw,
-	DiscardRandomCards,
+	RedrawRandomCards,
 	Discard,
 	Sell,
 	ResourceChange,

@@ -11,16 +11,22 @@ public class LivesManager : MonoBehaviour
 	{
 		CodeControl.Message.AddListener<LevelReadyEvent>(OnLevelReady);
 		CodeControl.Message.AddListener<EnemyReachedDestinationEvent>(OnEnemyReachedDestination);
+		CodeControl.Message.AddListener<LivesChangeRequestEvent>(OnLivesChangeRequested);
+	}
+
+	private void OnLivesChangeRequested(LivesChangeRequestEvent obj)
+	{
+		ChangeLives(obj.amount);
 	}
 
 	private void OnEnemyReachedDestination(EnemyReachedDestinationEvent obj)
 	{
-		RemoveLives(1);
+		ChangeLives(-1);
 	}
 
-	private void RemoveLives(int amount)
+	private void ChangeLives(int amount)
 	{
-		currentLives -= amount;
+		currentLives += amount;
 		DispatchLivesChangedEvent();
 		if (currentLives <= 0)
 		{
