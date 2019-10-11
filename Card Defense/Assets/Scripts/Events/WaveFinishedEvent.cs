@@ -1,4 +1,3 @@
-﻿
-public class WaveFinishedEvent : CodeControl.Message
+﻿public class WaveFinishedEvent : CodeControl.Message
 {
 }

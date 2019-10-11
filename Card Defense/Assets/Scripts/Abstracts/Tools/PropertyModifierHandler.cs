@@ -1,11 +1,34 @@
-﻿using UnityEngine;
-public class PropertyModifierHandler 
+﻿using System.Collections.Generic;
+using UnityEngine;
+[System.Serializable]
+public class PropertyModifierHandler
 {
 	public float fireRateMultiplier = 1f, rangeMultiplier = 1f, projectileDamageMultiplier = 1f, projectileAOEMultiplier = 1f;
 	public float fireRateMultiplierTimer, rangeMultiplierTimer, projectileDamageMultiplierTimer, projectileAOEMultiplierTimer;
+	private Dictionary<PropertyModifier, List<GameObject>> particles = new Dictionary<PropertyModifier, List<GameObject>>();
+	private System.Action<GameObject> OnParticleEnded;
+
+	public PropertyModifierHandler(System.Action<GameObject> OnParticleEnded)
+	{
+		particles.Add(PropertyModifier.AOE, new List<GameObject>());
+		particles.Add(PropertyModifier.Damage, new List<GameObject>());
+		particles.Add(PropertyModifier.FireRate, new List<GameObject>());
+		particles.Add(PropertyModifier.Range, new List<GameObject>());
+		this.OnParticleEnded = OnParticleEnded;
+	}
+
+	public void AddParticle(PropertyModifier propertyModifier, GameObject particle)
+	{
+		particles[propertyModifier].Add(particle);
+	}
+
+	public void AddParticles(PropertyModifier propertyModifier,List<GameObject> particles)
+	{
+		this.particles[propertyModifier].AddRange(particles);
+	}
 
 	public void PropertyCountdowns()
-	{		
+	{
 		if (fireRateMultiplierTimer >= 0)
 		{
 			fireRateMultiplierTimer -= Time.deltaTime * GameManager.gameSpeedMultiplier;
@@ -57,6 +80,7 @@ public class PropertyModifierHandler
 				rangeMultiplier = 1;
 				break;
 		}
+		RemoveParticlesForModifier(propertyModifier);
 	}
 
 	public void AddProjectileDamageMultiplier(float increase, float duration)
@@ -81,5 +105,13 @@ public class PropertyModifierHandler
 	{
 		projectileAOEMultiplier += increase;
 		projectileAOEMultiplierTimer += duration;
+	}
+
+	private void RemoveParticlesForModifier(PropertyModifier propertyModifier)
+	{
+		foreach (GameObject particle in particles[propertyModifier])
+		{
+			OnParticleEnded(particle);
+		}
 	}
 }

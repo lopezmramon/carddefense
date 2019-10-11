@@ -20,7 +20,6 @@ public class LevelEditor : EditorWindow
 		pathTiles = new HashSet<Tile>();
 	[MenuItem("Window/Level Editor %#e")]
 
-
 	static void Init()
 	{
 		GetWindow(typeof(LevelEditor));
@@ -44,6 +43,7 @@ public class LevelEditor : EditorWindow
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Level Editor", EditorStyles.boldLabel);
 		LevelCreationAndOpenButtons();
+		if(level == null)
 		newLevelName = GUILayout.TextField(newLevelName, 15, GUILayout.Width(150), GUILayout.Height(20));
 		GUILayout.BeginHorizontal();
 		GUILayout.Label("Map Width");

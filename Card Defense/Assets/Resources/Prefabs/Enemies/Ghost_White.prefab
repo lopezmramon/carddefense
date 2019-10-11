@@ -183,7 +183,7 @@ Transform:
   m_GameObject: {fileID: 4468283118356124483}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_Children:
   - {fileID: 4471862972535405325}
   - {fileID: 4471862979552240647}
@@ -221,7 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecfe6669a39484a459b69ad8e8ea2a79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
+  health: 5
   speed: 1.5
   enemyType: 3
   livesCost: 1
@@ -239,9 +239,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   drawGizmos: 1
-  detailedGizmos: 0
+  detailedGizmos: 1
   startEndModifier:
-    addPoints: 0
+    addPoints: 1
     exactStartPoint: 3
     exactEndPoint: 3
     useRaycasting: 0
@@ -275,6 +275,7 @@ MonoBehaviour:
   rotationSpeed: 10
   interpolatePathSwitches: 1
   switchPathInterpolationSpeed: 5
+  seeker: {fileID: 0}
   targetCompatibility: {fileID: 0}
 --- !u!65 &7709162329871739724
 BoxCollider:

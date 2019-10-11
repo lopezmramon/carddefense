@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class GameplayUIController : MonoBehaviour
 {
-	public Text livesLeft, currentTowerBuildingResource, timeBetweenWaves, gameSpeed;
+	public Text livesLeft, currentTowerBuildingResource, timeBetweenWaves, gameSpeed, countdown;
 	public Button emptyHand, redrawHand;
 
 	private void Awake()
@@ -16,6 +16,7 @@ public class GameplayUIController : MonoBehaviour
 		CodeControl.Message.AddListener<LevelReadyEvent>(OnLevelReady);
 		CodeControl.Message.AddListener<GameSpeedChangedEvent>(OnGameSpeedChanged);
 		CodeControl.Message.AddListener<ResourceChangedEvent>(OnResourceChanged);
+		CodeControl.Message.AddListener<CountdownStartedEvent>(OnCountdownStarted);
 		emptyHand.onClick.AddListener(() =>
 		{
 			CodeControl.Message.Send(new EmptyHandRequestEvent());
@@ -24,6 +25,12 @@ public class GameplayUIController : MonoBehaviour
 		{
 			CodeControl.Message.Send(new RedrawHandRequestEvent());
 		});
+	}
+
+	private void OnCountdownStarted(CountdownStartedEvent obj)
+	{
+		countdown.gameObject.SetActive(true);
+		countdown.text = string.Format("Wave starting in {0}...", Math.Round(TimeManager.currentCountdown,0));
 	}
 
 	private void OnResourceChanged(ResourceChangedEvent obj)
@@ -50,6 +57,7 @@ public class GameplayUIController : MonoBehaviour
 	private void OnWaveStarted(WaveStartedEvent obj)
 	{
 		timeBetweenWaves.gameObject.SetActive(false);
+		countdown.gameObject.SetActive(false);
 	}
 
 	private void Update()
@@ -57,6 +65,10 @@ public class GameplayUIController : MonoBehaviour
 		if (timeBetweenWaves.gameObject.activeInHierarchy)
 		{
 			timeBetweenWaves.text = string.Format("Time left for next wave: {0}", Math.Truncate(TimeManager.timeBetweenWaves));
+		}
+		if (countdown.gameObject.activeInHierarchy)
+		{
+			countdown.text = string.Format("Wave starting in {0}...", Math.Round(TimeManager.currentCountdown, 0));
 		}
 	}
 

@@ -24,7 +24,7 @@ MonoBehaviour:
     - 0
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_09
@@ -43,7 +43,7 @@ MonoBehaviour:
     - 0
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_08
@@ -62,7 +62,7 @@ MonoBehaviour:
     - 0
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_05
@@ -81,7 +81,7 @@ MonoBehaviour:
     - 0
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_13
@@ -100,7 +100,7 @@ MonoBehaviour:
     - 0
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_11
@@ -119,7 +119,7 @@ MonoBehaviour:
     - 0
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_12
@@ -138,7 +138,7 @@ MonoBehaviour:
     - 30
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_16
@@ -157,7 +157,7 @@ MonoBehaviour:
     - 60
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_17
@@ -176,7 +176,7 @@ MonoBehaviour:
     - 30
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_17
@@ -195,7 +195,7 @@ MonoBehaviour:
     - 60
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_17
@@ -214,7 +214,7 @@ MonoBehaviour:
     - 30
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_17
@@ -233,7 +233,7 @@ MonoBehaviour:
     - 60
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_17
@@ -252,7 +252,7 @@ MonoBehaviour:
     - 30
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_17
@@ -271,7 +271,7 @@ MonoBehaviour:
     - 60
     handModifier: 0
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_17
@@ -290,7 +290,7 @@ MonoBehaviour:
     - 0
     handModifier: 1
     handModifierValue: 2
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_01
@@ -309,7 +309,7 @@ MonoBehaviour:
     - 0
     handModifier: 1
     handModifierValue: 4
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_01
@@ -328,7 +328,7 @@ MonoBehaviour:
     - 0
     handModifier: 6
     handModifierValue: 25
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_03
@@ -347,7 +347,7 @@ MonoBehaviour:
     - 0
     handModifier: 6
     handModifierValue: 50
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_03
@@ -366,7 +366,7 @@ MonoBehaviour:
     - 0
     handModifier: 2
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_04
@@ -385,7 +385,7 @@ MonoBehaviour:
     - 0
     handModifier: 2
     handModifierValue: 0
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_04
@@ -404,7 +404,7 @@ MonoBehaviour:
     - 0
     handModifier: 4
     handModifierValue: 2
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_20
@@ -423,7 +423,7 @@ MonoBehaviour:
     - 0
     handModifier: 4
     handModifierValue: 4
-    extraModifier: 3
+    extraModifier: 7
     extraModifierValue: 0
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_20
@@ -522,6 +522,82 @@ MonoBehaviour:
     extraModifierValue: 2
     backgroundFileName: Card_Layer_2
     illustrationFileName: Card_15
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Slow All Enemies
+    cardType: 3
+    element: 4
+    description: Slows all enemies movement speed by 30% for 3 seconds
+    cost: 50
+    duration: 3
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 3
+    extraModifierValue: 30
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_08
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Slow Enemies
+    cardType: 3
+    element: 4
+    description: Slows 5 enemies movement speed by 60% for 3 seconds
+    cost: 50
+    duration: 3
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 5
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 4
+    extraModifierValue: 60
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_08
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Damage Enemies
+    cardType: 3
+    element: 6
+    description: Deals immediate 10 damage to 5 enemies
+    cost: 100
+    duration: 3
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 6
+    extraModifierValue: 3
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_09
+    resourceFileName: Arrow_01
+    backgroundSprite: {fileID: 0}
+    illustrationSprite: {fileID: 0}
+    resourceSprite: {fileID: 0}
+  - name: Damage All Enemies
+    cardType: 3
+    element: 6
+    description: Deals immediate 3 damage to all enemies
+    cost: 50
+    duration: 0
+    propertyModifiers: 00000000
+    propertyModifierValues:
+    - 0
+    handModifier: 0
+    handModifierValue: 0
+    extraModifier: 5
+    extraModifierValue: 3
+    backgroundFileName: Card_Layer_2
+    illustrationFileName: Card_09
     resourceFileName: Arrow_01
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}

@@ -17,6 +17,40 @@ public class ExtraCardAnalyzer
 			case ExtraModifier.ResourceMultiplier:
 				DispatchResourceMultiplierRequestEvent(card.duration, card.extraModifierValue);
 				break;
+			case ExtraModifier.Slow:
+				DispatchSlowEnemiesRequestEvent(false, (int)card.propertyModifierValues[0], card.duration, card.extraModifierValue);
+				break;
+			case ExtraModifier.SlowAll:
+				DispatchSlowEnemiesRequestEvent(true, 0, card.duration, card.extraModifierValue);
+				break;
+			case ExtraModifier.Damage:
+			case ExtraModifier.DamageAll:
+				DispatchDamageEnemiesRequestEvent(card.extraModifier == ExtraModifier.DamageAll, (int)card.duration, card.extraModifierValue);
+				break;
+		}
+	}
+
+	private void DispatchSlowEnemiesRequestEvent(bool all, int amount, float duration, float slowAmount)
+	{
+		if (all)
+		{
+			CodeControl.Message.Send(new SlowEnemiesRequestEvent(all, duration, slowAmount));
+		}
+		else
+		{
+			CodeControl.Message.Send(new SlowEnemiesRequestEvent(amount, duration, slowAmount));
+		}
+	}
+
+	private void DispatchDamageEnemiesRequestEvent(bool all, int amount, float damage)
+	{
+		if (all)
+		{
+			CodeControl.Message.Send(new DamageEnemiesRequestEvent(all, damage));
+		}
+		else
+		{
+			CodeControl.Message.Send(new DamageEnemiesRequestEvent(amount, damage));
 		}
 	}
 

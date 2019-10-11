@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 
 public class EnemySpawnManager : MonoBehaviour
@@ -14,12 +15,19 @@ public class EnemySpawnManager : MonoBehaviour
 
 	private void OnEnemySpawnRequested(EnemySpawnRequestEvent obj)
 	{
-		SpawnEnemy(obj.enemy, obj.startingPosition, obj.destination);
+		SpawnEnemy(obj.enemy, obj.Path);
 	}
 
-	public void SpawnEnemy(Enemy enemy, Vector3 startingPosition, Vector3 destination)
+	private void SpawnEnemy(Enemy enemy, Path path)
 	{
 		EnemyController enemyController = Instantiate(enemyPrefabs[(int)enemy.enemyType]);
-		enemyController.Initialize(enemy, startingPosition, destination);
+		enemyController.Initialize(enemy, path);
+		DispatchEnemySpawnedEvent(enemyController);
 	}
+
+	private void DispatchEnemySpawnedEvent(EnemyController enemy)
+	{
+		CodeControl.Message.Send(new EnemySpawnedEvent(enemy));
+	}
+
 }

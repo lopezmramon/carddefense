@@ -16,7 +16,7 @@ public class ProjectileController : MonoBehaviour
 		bouncesLeft = ElementUtility.BouncesFromElements(projectileElements);
 		chainLength = ElementUtility.ChainLengthFromElements(projectileElements);
 		speed = ElementUtility.SpeedFromElements(projectileElements);
-		AOEDamageDealer = new AOEDamageDealer(ElementUtility.AOEFromElements(projectileElements) * projectile.areaOfEffectMultiplier, transform);
+		AOEDamageDealer = new AOEDamageDealer(ElementUtility.AOEFromElements(projectileElements) * projectile.areaOfEffectMultiplier, transform, projectile.elements);
 		primaryMovementType = ElementUtility.MovementForElement(projectile.elements.Peek());
 		this.projectile = projectile;
 		switch (primaryMovementType)
@@ -126,7 +126,7 @@ public class ProjectileController : MonoBehaviour
 
 	private void DispatchEnemyDamageRequestEvent(EnemyController enemy, float damageAmount)
 	{
-		CodeControl.Message.Send(new EnemyDamageRequestEvent(enemy, damageAmount));
+		CodeControl.Message.Send(new EnemyDamageRequestEvent(enemy, damageAmount, projectile.elements));
 	}
 
 	private void DispatchElementContactParticleRequestEvent(Vector3 placement)

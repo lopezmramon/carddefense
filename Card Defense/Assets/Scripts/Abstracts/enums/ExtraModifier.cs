@@ -1,7 +1,11 @@
-﻿public enum ExtraModifier 
+﻿public enum ExtraModifier
 {
-   Lives,
-   Resources,
-   ResourceMultiplier,
-   None
+	Lives,
+	Resources,
+	ResourceMultiplier,
+	SlowAll,
+	Slow,
+	DamageAll,
+	Damage,
+	None
 }

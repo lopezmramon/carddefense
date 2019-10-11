@@ -17,7 +17,7 @@ public class GroundHazardController : MonoBehaviour
 		damage = ElementUtility.DamageFromElements(elements);
 		damageBaseTimer = ElementUtility.GroundHazardTimerFromElements(elements);
 		damageCountdownTimer = damageBaseTimer;
-		damageDealer = new AOEDamageDealer(0.35f, transform);
+		damageDealer = new AOEDamageDealer(0.35f, transform, projectile.elements);
 		duration = ElementUtility.GroundHazardDurationFromElements(elements);
 		Destroy(gameObject, duration);
 	}

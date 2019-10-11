@@ -30,7 +30,8 @@ public class ParticleManager : MonoBehaviour
 
 	private void OnTowerModifierApplied(TowerModifierAppliedEvent obj)
 	{
-		DestroyTemporaryParticlesAfterDuration(obj.duration);
+		obj.handler.AddParticles(obj.propertyModifiers[0], temporaryParticles);
+		temporaryParticles.Clear();
 	}
 
 	private void OnTowerModifierSimulateRequested(SimulateTowerModifierRequestEvent obj)
@@ -82,10 +83,11 @@ public class ParticleManager : MonoBehaviour
 	{
 		if (propertyModifiers[0] == PropertyModifier.None) return;
 		GameObject temporaryParticle = Instantiate(propertyModifierParticlePrefabs[(int)propertyModifiers[0]], tower.transform);
+		temporaryParticle.transform.localPosition = Vector3.zero;
 		temporaryParticles.Add(temporaryParticle);
 		ParticleSystem ps = temporaryParticle.GetComponent<ParticleSystem>();
 		ShapeModule shape = ps.shape;
-		MeshRenderer targetMesh = PropertyModifierHelper.FindCorrectMeshRendererForProperty(tower, propertyModifiers);			
+		MeshRenderer targetMesh = PropertyModifierHelper.FindCorrectMeshRendererForProperty(tower, propertyModifiers);
 		shape.meshRenderer = targetMesh;
 	}
 

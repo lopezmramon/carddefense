@@ -1,5 +1,4 @@
-﻿
-public class GenerateTilesRequestEvent : CodeControl.Message
+﻿public class GenerateTilesRequestEvent : CodeControl.Message
 {
 	public Level level;
 

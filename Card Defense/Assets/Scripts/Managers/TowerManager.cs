@@ -10,6 +10,7 @@ public class TowerManager : MonoBehaviour
 	public static Dictionary<Tile, TowerController> towersPlaced = new Dictionary<Tile, TowerController>();
 	private CardContainer cardOverTile;
 	private Tile hoverTile;
+	private bool canTowersFire;
 
 	private void Awake()
 	{
@@ -21,7 +22,19 @@ public class TowerManager : MonoBehaviour
 		CodeControl.Message.AddListener<ShowTargetRequestEvent>(OnTargetShowRequested);
 		CodeControl.Message.AddListener<StopShowingTargetsRequestEvent>(OnStopShowingTargetsRequested);
 		CodeControl.Message.AddListener<SellTowerRequestEvent>(OnSellTowerRequested);
+		CodeControl.Message.AddListener<WaveStartedEvent>(OnWaveStarted);
+		CodeControl.Message.AddListener<WaveFinishedEvent>(OnWaveFinished);
 		GenerateVisualTowers();
+	}
+
+	private void OnWaveStarted(WaveStartedEvent obj)
+	{
+		ToggleTowersFiring(true);
+	}
+
+	private void OnWaveFinished(WaveFinishedEvent obj)
+	{
+		ToggleTowersFiring(false);
 	}
 
 	private void OnSellTowerRequested(SellTowerRequestEvent obj)
@@ -149,7 +162,7 @@ public class TowerManager : MonoBehaviour
 					break;
 			}
 		}
-		DispatchPropertyModifiersAppliedEvent(propertyModifiers, duration);
+		DispatchPropertyModifiersAppliedEvent(tower.propertyModifierHandler, propertyModifiers);
 	}
 
 	private void SimulateModifier(TowerController towerController, Card card)
@@ -220,7 +233,7 @@ public class TowerManager : MonoBehaviour
 	{
 		if (tile.transform == null) return;
 		TowerController tower = Instantiate(baseTowers[(int)element], tile.transform);
-		tower.Initialize(2.5f, element);
+		tower.Initialize(2.5f, element, canTowersFire);
 		tower.transform.localPosition = new Vector3(0, 0.5f, 0);
 		towersPlaced.Add(tile, tower);
 	}
@@ -228,6 +241,15 @@ public class TowerManager : MonoBehaviour
 	private void UpgradeTower(Tile tile, Element element)
 	{
 		towersPlaced[tile].Upgrade(element);
+	}
+
+	private void ToggleTowersFiring(bool active)
+	{
+		canTowersFire = active;
+		foreach (KeyValuePair<Tile, TowerController> tower in towersPlaced)
+		{
+			tower.Value.ToggleShooting = canTowersFire;
+		}
 	}
 
 	private void DispatchTileVFXRequestEvent(Tile tile, Element element)
@@ -260,8 +282,8 @@ public class TowerManager : MonoBehaviour
 		CodeControl.Message.Send(new TowerSoldEvent(tower));
 	}
 
-	private void DispatchPropertyModifiersAppliedEvent(PropertyModifier[] propertyModifiers, float duration)
+	private void DispatchPropertyModifiersAppliedEvent(PropertyModifierHandler handler, PropertyModifier[] propertyModifiers)
 	{
-		CodeControl.Message.Send(new TowerModifierAppliedEvent(duration, propertyModifiers));
+		CodeControl.Message.Send(new TowerModifierAppliedEvent(handler, propertyModifiers));
 	}
 }

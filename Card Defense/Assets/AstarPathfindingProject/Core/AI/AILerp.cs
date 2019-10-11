@@ -248,7 +248,7 @@ namespace Pathfinding {
 		public System.Action onSearchPath { get; set; }
 
 		/// <summary>Cached Seeker component</summary>
-		protected Seeker seeker;
+		public Seeker seeker;
 
 		/// <summary>Cached Transform component</summary>
 		protected Transform tr;
@@ -589,7 +589,7 @@ namespace Pathfinding {
 
 			if (interpolator.remainingDistance < 0.0001f && !reachedEndOfPath) {
 				reachedEndOfPath = true;
-				onTargetReached();
+				onTargetReached?.Invoke();
 			}
 
 			direction = interpolator.tangent;

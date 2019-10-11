@@ -7,11 +7,13 @@ public class AOEDamageDealer
 {
 	private float areaOfEffect;
 	private Transform effectCenter;
+	private Queue<Element> elements;
 
-	public AOEDamageDealer(float areaOfEffect, Transform effectCenter)
+	public AOEDamageDealer(float areaOfEffect, Transform effectCenter, Queue<Element> elements)
 	{
 		this.areaOfEffect = areaOfEffect;
 		this.effectCenter = effectCenter;
+		this.elements = elements;
 	}
 
 	public void IncreaseAOE(float increase)
@@ -62,7 +64,7 @@ public class AOEDamageDealer
 
 	private void DispatchEnemyDamageRequestEvent(EnemyController enemy, float damageAmount)
 	{
-		CodeControl.Message.Send(new EnemyDamageRequestEvent(enemy, damageAmount));
+		CodeControl.Message.Send(new EnemyDamageRequestEvent(enemy, damageAmount, elements));
 	}
 
 	public Transform ClosestEnemy(Vector3 position, string currentTargetName)

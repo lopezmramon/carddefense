@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
+using UnityEngine.EventSystems;
 [RequireComponent(typeof(AILerp))]
 [RequireComponent(typeof(Seeker))]
 [RequireComponent(typeof(BoxCollider))]
-public class EnemyController : MonoBehaviour
+public class EnemyController : MonoBehaviour, IPointerDownHandler
 {
 	public float health, speed;
 	private Animator animator;
@@ -14,11 +15,13 @@ public class EnemyController : MonoBehaviour
 	private Enemy enemy;
 	public EnemyType enemyType;
 	public int livesCost;
+	private float slowMultiplier, slowDuration;
 
 	private void Awake()
 	{
 		AILerp = GetComponent<AILerp>();
 		animator = GetComponent<Animator>();
+		slowMultiplier = 1;
 		CodeControl.Message.AddListener<GameSpeedChangedEvent>(OnGameSpeedChanged);
 		AILerp.onTargetReached += OnPathEndReached;
 		SetSpeedValues();
@@ -34,7 +37,41 @@ public class EnemyController : MonoBehaviour
 	private void SetSpeedValues()
 	{
 		animator.SetFloat("SpeedMultiplier", speed * GameManager.gameSpeedMultiplier);
-		AILerp.speed = speed * GameManager.gameSpeedMultiplier;
+		AILerp.speed = speed * slowMultiplier * GameManager.gameSpeedMultiplier;
+	}
+
+	public void SlowEnemy(float multiplier, float duration)
+	{
+		AILerp.speed *= multiplier;
+		slowMultiplier = multiplier;
+		slowDuration = duration;
+		StartCoroutine(Slow());
+	}
+
+	private IEnumerator Slow()
+	{
+		while(slowDuration > 0)
+		{
+			yield return new WaitForSeconds(0.5f);
+			CodeControl.Message.Send(new ElementalContactParticleRequestEvent(Element.Ice, transform.position));
+		}
+		yield return null;
+	}
+
+	private void Update()
+	{
+		if (slowDuration > 0)
+		{
+			slowDuration -= Time.deltaTime * GameManager.gameSpeedMultiplier;
+		}
+		else
+		{
+			if (slowMultiplier != 1)
+			{
+				slowMultiplier = 1;
+				SetSpeedValues();
+			}
+		}
 	}
 
 	private void OnPathEndReached()
@@ -65,23 +102,30 @@ public class EnemyController : MonoBehaviour
 	{
 		animator.SetTrigger("Die");
 		yield return !animator.GetCurrentAnimatorStateInfo(0).IsName("Die");
+		CodeControl.Message.Send(new EnemyDeathEvent(this));
 		CodeControl.Message.RemoveListener<GameSpeedChangedEvent>(OnGameSpeedChanged);
 		Destroy(gameObject);
 	}
 
-	internal void Initialize(Enemy enemy, Vector3 startingPoint, Vector3 destination)
+	public void Initialize(Enemy enemy, Path path)
 	{
 		if (AILerp == null) AILerp = GetComponent<AILerp>();
 		this.enemy = enemy;
-		destination *= 2;
-		transform.position = startingPoint;
-		AILerp.destination = destination;
-		AILerp.SearchPath();
+		AILerp.SetPath(path);
+		if (path.path == null) AILerp.seeker.StartPath(path);
 		animator.SetBool("Moving", true);
 	}
 
 	private void DispatchEnemyReachedDestinationEvent()
 	{
 		CodeControl.Message.Send(new EnemyReachedDestinationEvent(this));
+	}
+
+	public void OnPointerDown(PointerEventData eventData)
+	{
+		if(eventData.button == PointerEventData.InputButton.Left)
+		{
+
+		}
 	}
 }

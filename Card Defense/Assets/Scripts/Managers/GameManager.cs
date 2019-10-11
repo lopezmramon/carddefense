@@ -6,7 +6,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class GameManager : MonoBehaviour
 {
-	public static float gameSpeedMultiplier = 1f;
+	public static float gameSpeedMultiplier = 5f;
 	[HideInInspector]
 	public float speed;
 
@@ -34,9 +34,9 @@ public class GameManager : MonoBehaviour
 		CodeControl.Message.Send(new GameplayStartEvent());
 	}
 
-	public void DispatchNextWaveStartRequestEvent()
+	public void DispatchFirstWaveCountdownStartRequestEvent()
 	{
-		CodeControl.Message.Send(new NextWaveStartRequestEvent());
+		CodeControl.Message.Send(new FirstWaveCountdownStartRequestEvent());
 	}
 
 	public void UpdateGameSpeed(float speed)

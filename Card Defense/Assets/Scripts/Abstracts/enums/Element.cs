@@ -37,12 +37,17 @@ public static class ElementUtility
 
 	public static int ResourceRefundForSellingElements(Element[] elements)
 	{
-		return elements.Length * 100;
+		return elements.Length * 50;
 	}
 
 	public static float GroundHazardDurationFromElements(Element[] elements)
 	{
-		return 2f;
+		int waterAmount = 0;
+		foreach(Element element in elements)
+		{
+			if (element == Element.Water) waterAmount++;
+		}
+		return waterAmount * 2f;
 	}
 
 	public static TowerTargeting TowerTargetingForBaseElement(Element element)
@@ -76,7 +81,12 @@ public static class ElementUtility
 
 	public static float DamageFromElements(Element[] elements)
 	{
-		return 1f;
+		float damage = 0;
+		foreach(Element element in elements)
+		{
+			damage += ElementDamage(element);
+		}
+		return damage;
 	}
 
 	public static float SpeedFromElements(Element[] elements)
@@ -110,5 +120,41 @@ public static class ElementUtility
 	public static float GroundHazardTimerFromElements(Element[] elements)
 	{
 		return 0.5f;
+	}
+
+	public static float ElementDamage(Element element)
+	{
+		switch (element)
+		{
+			case Element.Fire:
+				return 2.5f;
+			case Element.Water:
+				return 1f;
+			case Element.Lightning:
+				return 0.75f;
+			case Element.Earth:
+				return 1f;
+			case Element.Wind:
+				return 0.75f;
+		}
+		return 0;
+	}
+
+	public static float ElementSpeed(Element element)
+	{
+		switch (element)
+		{
+			case Element.Fire:
+				return 2.5f;
+			case Element.Water:
+				return 1f;
+			case Element.Lightning:
+				return 0.75f;
+			case Element.Earth:
+				return 1f;
+			case Element.Wind:
+				return 0.75f;
+		}
+		return 0;
 	}
 }

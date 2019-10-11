@@ -71,7 +71,7 @@ public class TileManager : MonoBehaviour
 	{
 		Transform ground = tileParent.Find("Ground");
 		ground.localScale = new Vector3(level.mapData.width * 2, level.mapData.height * 2, 1);
-		ground.localPosition = new Vector3(level.mapData.width * 0.8f, 0, level.mapData.height * 0.8f);
+		ground.localPosition = new Vector3(level.mapData.width -1, 0, level.mapData.height -1);
 		foreach (Tile tile in level.mapData.tiles)
 		{
 			if (tile.walkable)
@@ -92,7 +92,7 @@ public class TileManager : MonoBehaviour
 
 	private TileController FindTileControllerFromTile(Tile tile)
 	{
-		return tiles.Find((x => x.tile == tile));
+		return tiles.Find((tileController => tileController.tile == tile));
 	}
 
 	private void DispatchLevelReadyEvent(Level level)

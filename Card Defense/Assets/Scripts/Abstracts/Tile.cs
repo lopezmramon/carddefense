@@ -26,10 +26,7 @@ public class Tile
 		IsEndingPoint = false;
 	}
 
-	public Vector3 Vector3FromCoordinates()
-	{
-		return new Vector3(x, 0, y);
-	}
+	public Vector3 Vector3FromCoordinates => new Vector3(x * 2, 0, y * 2);
 
 	public bool CanBeBuiltOn()
 	{

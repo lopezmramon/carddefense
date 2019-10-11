@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pathfinding;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,8 +8,9 @@ public class WaveManager : MonoBehaviour
 {
 	private Level currentLevel;
 	private Wave currentWave;
-	private int currentWaveIndex, currentEnemyIndex;
+	private int currentWaveIndex, currentEnemyIndex, startingPointIndex, endingPointIndex;
 	private Tile[] startingPoints, endingPoints;
+	public List<Path> paths = new List<Path>();
 
 	private void Awake()
 	{
@@ -25,7 +27,7 @@ public class WaveManager : MonoBehaviour
 	{
 		currentWaveIndex++;
 		currentEnemyIndex = 0;
-		if(currentWaveIndex < currentLevel.waves.Count)
+		if (currentWaveIndex < currentLevel.waves.Count)
 		{
 			currentWave = currentLevel.waves[currentWaveIndex];
 			DispatchWaveStartedEvent(currentWaveIndex);
@@ -49,28 +51,52 @@ public class WaveManager : MonoBehaviour
 		currentLevel = level;
 		startingPoints = currentLevel.mapData.GetStartingPoints().ToArray();
 		endingPoints = currentLevel.mapData.GetEndingPoints().ToArray();
+		CalculatePaths();
+	}
+
+	private void CalculatePaths()
+	{
+		startingPointIndex = 0;
+		endingPointIndex = 0;
+		Path path = ABPath.Construct(startingPoints[0].Vector3FromCoordinates, endingPoints[0].Vector3FromCoordinates, OnPathCalculationDone);
+		AstarPath.StartPath(path);
+	}
+
+	private void OnPathCalculationDone(Path path)
+	{
+		if (path.CompleteState == PathCompleteState.Complete)
+		{
+			paths.Add(path);
+			endingPointIndex++;
+			if (endingPointIndex >= endingPoints.Length)
+			{
+				endingPointIndex = 0;
+				startingPointIndex++;
+			}
+			if (startingPointIndex >= startingPoints.Length) return;
+			Path nextPath = ABPath.Construct(startingPoints[startingPointIndex].Vector3FromCoordinates, endingPoints[endingPointIndex].Vector3FromCoordinates, OnPathCalculationDone);
+			AstarPath.StartPath(nextPath);
+		}
+		else if (path.CompleteState == PathCompleteState.Error)
+		{
+			Debug.Log(path.error.ToString());
+		}
 	}
 
 	private void ManageWave()
 	{
-		int randomStartingPointIndex = UnityEngine.Random.Range(0, startingPoints.Length);
-		int randomEndingPointIndex = UnityEngine.Random.Range(0, endingPoints.Length);
 		if (currentEnemyIndex < currentWave.enemies.Count)
 		{
 			Enemy enemy = currentWave.enemies[currentEnemyIndex];
-			DispatchEnemySpawnRequestEvent(enemy.enemyType, enemy.specialAbility, startingPoints[randomStartingPointIndex].Vector3FromCoordinates(), endingPoints[randomEndingPointIndex].Vector3FromCoordinates());
+			int randomPathIndex = UnityEngine.Random.Range(0, paths.Count);
+			DispatchEnemySpawnRequestEvent(enemy.enemyType, enemy.specialAbility, paths[randomPathIndex]);
 		}
-		if (currentEnemyIndex == currentWave.enemies.Count - 1)
+		if (currentEnemyIndex >= currentWave.enemies.Count - 1)
 		{
+			CalculatePaths();
 			DispatchLastEnemyInWaveSpawnedEvent();
-			DispatchWaveEndedEvent();
 		}
 		currentEnemyIndex++;
-	}
-
-	private void DispatchWaveEndedEvent()
-	{
-		CodeControl.Message.Send(new WaveFinishedEvent());
 	}
 
 	private void Update()
@@ -85,9 +111,9 @@ public class WaveManager : MonoBehaviour
 		}
 	}
 
-	private void DispatchEnemySpawnRequestEvent(EnemyType enemyType, EnemySpecialAbility specialAbility, Vector3 startPosition, Vector3 destination)
+	private void DispatchEnemySpawnRequestEvent(EnemyType enemyType, EnemySpecialAbility specialAbility, Path path)
 	{
-		CodeControl.Message.Send(new EnemySpawnRequestEvent(enemyType, specialAbility, startPosition, destination));
+		CodeControl.Message.Send(new EnemySpawnRequestEvent(enemyType, specialAbility, path));
 	}
 
 	private void DispatchLastEnemyInWaveSpawnedEvent()
@@ -102,7 +128,7 @@ public class WaveManager : MonoBehaviour
 
 	private void DispatchAllWavesFinishedEvent()
 	{
-		CodeControl.Message.Send(new AllWavesFinishedEvent(currentLevel.waves.Count, 
+		CodeControl.Message.Send(new AllWavesFinishedEvent(currentLevel.waves.Count,
 			currentLevel.TotalEnemiesInLevel()));
 	}
 }

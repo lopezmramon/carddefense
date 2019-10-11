@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class TowerController : MonoBehaviour, IPointerDownHandler
 {
+	private Tower tower;
+	public Tower GetTower { get { return tower; } }
 	private float progress;
 	public float fireRate, fireCountdown, fireRange, rotationSpeed = 10f, buildTime, lerpElapsedTime;
 	public Material[] buildMaterials;
@@ -22,11 +24,23 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 	private Animator animator;
 	private bool building = false;
 	public PropertyModifierHandler propertyModifierHandler;
+	private bool canFire;
+	public bool ToggleShooting
+	{
+		get
+		{
+			return canFire;
+		}
+		set
+		{
+			canFire = value;
+		}
+	}
 
 	private void Awake()
 	{
 		animator = GetComponent<Animator>();
-		propertyModifierHandler = new PropertyModifierHandler();
+		propertyModifierHandler = new PropertyModifierHandler((particle) => Destroy(particle));
 	}
 
 	private void SetupTargeting()
@@ -58,19 +72,21 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 		if (building)
 		{
 			Build();
+			return;
 		}
-
+		LookAtTarget();
+		if (!canFire) return;
 		if (target == null || Vector3.Distance(transform.position, target.position) > fireRange)
 		{
 			DetectEnemies();
 		}
-		LookAtTarget();
 		ShootingCountdown();
-		propertyModifierHandler.PropertyCountdowns();		
+		propertyModifierHandler.PropertyCountdowns();
 	}
 
 	private void ShootingCountdown()
 	{
+		if (!canFire) return;
 		if (fireCountdown >= 0)
 		{
 			fireCountdown -= Time.deltaTime * GameManager.gameSpeedMultiplier;
@@ -149,7 +165,7 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 		}
 		Quaternion rotation = Quaternion.LookRotation(targetLocation - rotatingPart.position);
 		rotatingPart.rotation =
-		Quaternion.RotateTowards(rotatingPart.rotation, 
+		Quaternion.RotateTowards(rotatingPart.rotation,
 		rotation, Time.deltaTime * rotationSpeed * GameManager.gameSpeedMultiplier);
 	}
 
@@ -200,8 +216,9 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 		}
 	}
 
-	public void Initialize(float buildTime, Element initialElement)
+	public void Initialize(float buildTime, Element initialElement, bool canFire)
 	{
+		this.canFire = canFire;
 		Build(buildTime, initialElement);
 		SetupTargeting();
 	}
@@ -224,7 +241,7 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 			renderer.material = dissolveControlMaterial;
 		}
 		building = true;
-	}	
+	}
 
 	internal void Upgrade(Element element)
 	{
@@ -241,11 +258,17 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 				DispatchShowTargetRequestEvent();
 				DispatchDisplayParabolaRequestEvent();
 			}
+			DispatchTowerInfoUIDisplayRequestEvent();
 		}
 		else if (eventData.button == PointerEventData.InputButton.Right)
 		{
 			//DispatchSellTowerRequestEvent();
 		}
+	}
+
+	private void DispatchTowerInfoUIDisplayRequestEvent()
+	{
+		CodeControl.Message.Send(new TowerInfoUIDisplayRequestEvent(this));
 	}
 
 	private void DispatchSellTowerRequestEvent()

@@ -1,11 +1,11 @@
 ﻿public class TowerModifierAppliedEvent : CodeControl.Message
 {
-	public float duration;
+	public PropertyModifierHandler handler;
 	public PropertyModifier[] propertyModifiers;
 
-	public TowerModifierAppliedEvent(float duration, PropertyModifier[] propertyModifiers)
+	public TowerModifierAppliedEvent(PropertyModifierHandler handler, PropertyModifier[] propertyModifiers)
 	{
-		this.duration = duration;
+		this.handler = handler;
 		this.propertyModifiers = propertyModifiers;
 	}
 }
