@@ -26,6 +26,7 @@ public class OrbitMovement
 
 	public void Rotate()
 	{
+		if (center == null || transform == null) return;
 		transform.RotateAround(center.position, axis, rotationSpeed * Time.deltaTime * GameManager.gameSpeedMultiplier);
 		desiredPosition = (transform.position - center.position).normalized * radius + center.position;
 		transform.position = Vector3.MoveTowards(transform.position, desiredPosition, Time.deltaTime * radiusSpeed * GameManager.gameSpeedMultiplier);

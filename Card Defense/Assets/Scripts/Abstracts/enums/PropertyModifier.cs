@@ -8,6 +8,7 @@ public enum PropertyModifier
 	Damage,
 	AOE,
 	Range,
+	ProjectileSpeed,
 }
 
 public static class PropertyModifierHelper
@@ -24,6 +25,7 @@ public static class PropertyModifierHelper
 			case PropertyModifier.Damage:
 				meshRenderer = tower.TowerTurretRenderer;
 				break;
+			case PropertyModifier.ProjectileSpeed:
 			case PropertyModifier.FireRate:
 				meshRenderer = tower.TowerBarrelRenderer;
 				break;

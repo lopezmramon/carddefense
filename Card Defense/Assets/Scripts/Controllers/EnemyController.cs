@@ -16,6 +16,9 @@ public class EnemyController : MonoBehaviour, IPointerDownHandler
 	public EnemyType enemyType;
 	public int livesCost;
 	private float slowMultiplier, slowDuration;
+	private int randomStart, randomEnd;
+	private Tile[] startingPoints;
+	private Tile[] endingPoints;
 
 	private void Awake()
 	{
@@ -26,12 +29,23 @@ public class EnemyController : MonoBehaviour, IPointerDownHandler
 		AILerp.onTargetReached += OnPathEndReached;
 		SetSpeedValues();
 		this.enemy = new Enemy(enemyType, EnemySpecialAbility.None);
-		enemy.livesCost = livesCost;
 	}
 
 	private void OnGameSpeedChanged(GameSpeedChangedEvent obj)
 	{
 		SetSpeedValues();
+	}
+
+	public void Initialize(Enemy enemy, Tile[] startingPositions, Tile[] endingPositions)
+	{
+		if (AILerp == null) AILerp = GetComponent<AILerp>();
+		this.enemy = enemy;
+		this.enemy.transform = transform;
+		this.enemy.maxHealth = health;
+		this.enemy.currentHealth = health;
+		this.enemy.speed = speed;
+		RandomlyChoosePath(startingPositions, endingPositions);
+		animator.SetBool("Moving", true);
 	}
 
 	private void SetSpeedValues()
@@ -83,6 +97,8 @@ public class EnemyController : MonoBehaviour, IPointerDownHandler
 	public void Damage(float damage)
 	{
 		health -= damage;
+		enemy.currentHealth = health;
+		enemy.OnHealthChanged?.Invoke();
 		if (health <= 0)
 		{
 			Die();
@@ -107,25 +123,60 @@ public class EnemyController : MonoBehaviour, IPointerDownHandler
 		Destroy(gameObject);
 	}
 
-	public void Initialize(Enemy enemy, Path path)
+	private void RandomlyChoosePath(Tile[] startingPoints, Tile[] endingPoints)
 	{
-		if (AILerp == null) AILerp = GetComponent<AILerp>();
-		this.enemy = enemy;
+		randomStart = UnityEngine.Random.Range(0, startingPoints.Length);
+		randomEnd = UnityEngine.Random.Range(0, endingPoints.Length);
+		this.startingPoints = startingPoints;
+		this.endingPoints = endingPoints;
+		Path path = ABPath.Construct(startingPoints[randomStart].Vector3FromCoordinates, endingPoints[randomEnd].Vector3FromCoordinates, OnPathCalculationDone);
 		AILerp.SetPath(path);
-		if (path.path == null) AILerp.seeker.StartPath(path);
-		animator.SetBool("Moving", true);
 	}
 
-	private void DispatchEnemyReachedDestinationEvent()
+	private void OnPathCalculationDone(Path path)
 	{
-		CodeControl.Message.Send(new EnemyReachedDestinationEvent(this));
+		if (path.PipelineState == PathState.Returned)
+		{
+			AILerp.SetPath(path);
+		}
+		else if (path.CompleteState == PathCompleteState.Error)
+		{
+			if (randomStart < startingPoints.Length)
+			{
+				randomStart++;
+			}
+			else if (randomStart > 0)
+			{
+				randomStart--;
+			}
+			if (randomEnd < endingPoints.Length)
+			{
+				randomEnd++;
+			}
+			else if (randomStart > 0)
+			{
+				randomEnd--;
+			}
+			Path nextPath = ABPath.Construct(startingPoints[randomStart].Vector3FromCoordinates, endingPoints[randomEnd].Vector3FromCoordinates, OnPathCalculationDone);
+			AILerp.SetPath(path);
+		}
 	}
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
 		if(eventData.button == PointerEventData.InputButton.Left)
 		{
-
+			DispatchEnemyInfoUIRequestEvent(enemy);
 		}
+	}
+	//maybe I need to update the speed if the enemy is slowed?
+	private void DispatchEnemyInfoUIRequestEvent(Enemy enemy)
+	{		
+		CodeControl.Message.Send(new EnemyInfoUIDisplayRequestEvent(enemy));
+	}
+
+	private void DispatchEnemyReachedDestinationEvent()
+	{
+		CodeControl.Message.Send(new EnemyReachedDestinationEvent(this));
 	}
 }

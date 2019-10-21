@@ -222,7 +222,7 @@ public class LevelEditor : EditorWindow
 			{
 				tile.IsStartingPoint = false;
 				startingTiles.Remove(tile);
-			}
+			}			
 		}
 		else
 		{
@@ -256,6 +256,7 @@ public class LevelEditor : EditorWindow
 	{
 		return new Vector2Int(index % width, index / width);
 	}
+
 	private void PreviousNextEnemyButtons(Wave wave)
 	{
 		if (wave == null || wave.enemies == null || wave.enemies.Count <= 1) return;

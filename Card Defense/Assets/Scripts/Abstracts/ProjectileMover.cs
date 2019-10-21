@@ -5,7 +5,7 @@ public class ProjectileMover
 {
 	public Transform projectile, target;
 	private Vector3 targetPos, startPos;
-	private float speed, aoeAtTowerTimer;
+	private float speed, aoeAtTowerTimer, timeBetweenAOEsAtTower;
 	private Parabola[] parabolas;
 	private int currentParabolaIndex, currentPointInParabolaIndex;
 	public bool reassigning;
@@ -28,15 +28,22 @@ public class ProjectileMover
 		currentPointInParabolaIndex = 0;
 	}
 
-	public ProjectileMover(float timeBetweenAOEsAtTower)
+	public ProjectileMover(float speed, float timeBetweenAOEsAtTower, Transform projectile)
 	{
-		speed = timeBetweenAOEsAtTower;
+		this.projectile = projectile;
+		this.speed = speed;
+		this.timeBetweenAOEsAtTower = timeBetweenAOEsAtTower;
 		aoeAtTowerTimer = speed;
+	}
+
+	public void SetParabolas(Parabola[] parabolas)
+	{
+		this.parabolas = parabolas;
 	}
 
 	public void CheckAOEAtTowerTimer(Action OnAOEAtTowerActivation)
 	{
-		if(aoeAtTowerTimer <= Time.deltaTime)
+		if(aoeAtTowerTimer <= 0)
 		{
 			OnAOEAtTowerActivation();
 			aoeAtTowerTimer = speed;

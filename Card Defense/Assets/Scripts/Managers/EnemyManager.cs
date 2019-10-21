@@ -7,6 +7,7 @@ public class EnemyManager : MonoBehaviour
 {
 	private List<EnemyController> enemies = new List<EnemyController>();
 	private bool lastEnemySpawned = false;
+
 	private void Awake()
 	{
 		CodeControl.Message.AddListener<EnemyDeathEvent>(OnEnemyDeath);
@@ -26,7 +27,6 @@ public class EnemyManager : MonoBehaviour
 
 	private void SlowEnemies(bool all, int amount, float duration, float slowAmount)
 	{
-
 		if (all)
 		{
 			foreach (EnemyController enemy in enemies)
@@ -86,7 +86,8 @@ public class EnemyManager : MonoBehaviour
 	private void OnEnemyDamageRequested(EnemyDamageRequestEvent obj)
 	{
 		obj.enemy.Damage(obj.damageAmount);
-		if (obj.elements.Contains(Element.Ice)) obj.enemy.SlowEnemy(0.75f, 5);
+		float slowAmount = ElementUtility.Slow(obj.elements.ToArray());
+		if (slowAmount > 0) obj.enemy.SlowEnemy(1f - slowAmount, 5);
 	}
 
 	private void DamageEnemies(bool all, int amount, float damage)

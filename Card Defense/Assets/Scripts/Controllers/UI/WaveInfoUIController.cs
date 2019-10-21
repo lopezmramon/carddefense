@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,4 +16,9 @@ public class WaveInfoUIController : MonoBehaviour
     {
         
     }
+
+	internal void Initialize(Wave wave)
+	{
+		throw new NotImplementedException();
+	}
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AOEDamageDealer
 {
-	private float areaOfEffect;
+	public float areaOfEffect;
 	private Transform effectCenter;
 	private Queue<Element> elements;
 
@@ -52,6 +52,11 @@ public class AOEDamageDealer
 		return Physics.OverlapSphere(center, areaOfEffect, 1 << LayerMask.NameToLayer("Enemy"));
 	}
 
+	public Collider[] EnemiesNearPointWithSpecifiedAOE(Vector3 center, float aoe)
+	{
+		return Physics.OverlapSphere(center, aoe, 1 << LayerMask.NameToLayer("Enemy"));
+	}
+
 	public Vector3[] EnemyPositionsNearPointWithCurrentAOE(Vector3 center)
 	{
 		List<Vector3> positions = new List<Vector3>();
@@ -67,12 +72,12 @@ public class AOEDamageDealer
 		CodeControl.Message.Send(new EnemyDamageRequestEvent(enemy, damageAmount, elements));
 	}
 
-	public Transform ClosestEnemy(Vector3 position, string currentTargetName)
+	public Transform ClosestEnemy(Vector3 position, Transform currentTarget, float aoe)
 	{
 		Transform closestEnemy = null;
-		foreach (Collider collider in EnemiesNearPointWithCurrentAOE(position))
+		foreach (Collider collider in EnemiesNearPointWithSpecifiedAOE(position, aoe))
 		{
-			if (collider.name == currentTargetName)
+			if (collider.transform == currentTarget)
 			{
 				continue;
 			}

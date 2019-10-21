@@ -14,11 +14,11 @@ public class GroundHazardController : MonoBehaviour
 	{
 		this.projectile = projectile;
 		elements = projectile.elements.ToArray();
-		damage = ElementUtility.DamageFromElements(elements);
-		damageBaseTimer = ElementUtility.GroundHazardTimerFromElements(elements);
+		damage = ElementUtility.ProjectileDamage(elements);
+		damageBaseTimer = ElementUtility.GroundHazardDuration(elements);
 		damageCountdownTimer = damageBaseTimer;
 		damageDealer = new AOEDamageDealer(0.35f, transform, projectile.elements);
-		duration = ElementUtility.GroundHazardDurationFromElements(elements);
+		duration = ElementUtility.GroundHazardDuration(elements);
 		Destroy(gameObject, duration);
 	}
 

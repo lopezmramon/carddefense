@@ -2,10 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class ProjectileManager : MonoBehaviour
 {
-	public ProjectileController[] elementProjectilePrefabs;
+	public ProjectileCollection projectileCollection;
 	public GroundHazardController groundHazardPrefab;
 
 	private void Awake()
@@ -26,7 +25,7 @@ public class ProjectileManager : MonoBehaviour
 
 	private void ShootProjectile(Projectile projectile, Transform projectileOrigin)
 	{
-		ProjectileController projectileShot = Instantiate(elementProjectilePrefabs[(int)projectile.elements.Peek()]);
+		ProjectileController projectileShot = Instantiate(projectileCollection.GetAttribute(projectile.elements.Peek()));
 		projectileShot.transform.position = projectileOrigin.position;
 		projectileShot.Initialize(projectile);
 	}

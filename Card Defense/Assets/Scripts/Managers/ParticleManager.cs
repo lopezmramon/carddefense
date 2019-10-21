@@ -71,10 +71,11 @@ public class ParticleManager : MonoBehaviour
 
 	private void PlaceElementalContactParticle(Element element, Vector3[] placements)
 	{
-		foreach (Vector3 placement in placements)
+		for (int i = 0; i < placements.Length; i++)
 		{
 			GameObject particle = Instantiate(elementalContactParticlePrefabs[(int)element]);
-			particle.transform.position = placement;
+			placements[i].y += 0.5f;
+			particle.transform.position = placements[i];
 			Destroy(particle, 2);
 		}
 	}

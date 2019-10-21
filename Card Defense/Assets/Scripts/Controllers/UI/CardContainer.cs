@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 public class CardContainer : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
 	public Image background, illustration, resource, raycastTarget;
-	public Text description, cost, cardName;
+	public TextMeshProUGUI description, cost, cardName;
 	private Transform originalParent;
 	public Card card;
 	private bool followMouse = false;

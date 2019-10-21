@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class TowerManager : MonoBehaviour
 {
-	public TowerController[] baseTowers, visualTowers;
+	public ElementTowerCollection baseTowers;
+	private ElementTowerCollection visualTowers;
 	public static Dictionary<Tile, TowerController> towersPlaced = new Dictionary<Tile, TowerController>();
 	private CardContainer cardOverTile;
 	private Tile hoverTile;
@@ -73,7 +74,6 @@ public class TowerManager : MonoBehaviour
 	private void OnCardDropped(CardDroppedEvent obj)
 	{
 		if (hoverTile == null || cardOverTile == null) return;
-
 		if (cardOverTile.card.cardType == CardType.Tower)
 		{
 			if (ResourceManager.currentResourceAmount >= cardOverTile.card.cost)
@@ -180,7 +180,7 @@ public class TowerManager : MonoBehaviour
 
 	private void PlaceVisualTowerAtTile(Tile tile, Element element)
 	{
-		TowerController visualTower = visualTowers[(int)element];
+		TowerController visualTower = visualTowers.GetAttribute(element);
 		visualTower.gameObject.SetActive(true);
 		visualTower.transform.SetParent(tile.transform);
 		visualTower.transform.localPosition = new Vector3(0, 0.5f, 0);
@@ -198,7 +198,7 @@ public class TowerManager : MonoBehaviour
 
 	private void DeactivateAllVisualTowers()
 	{
-		foreach (TowerController tower in visualTowers)
+		foreach (TowerController tower in visualTowers.Collection)
 		{
 			if (tower == null) continue;
 			tower.gameObject.SetActive(false);
@@ -207,13 +207,12 @@ public class TowerManager : MonoBehaviour
 
 	private void GenerateVisualTowers()
 	{
-		visualTowers = new TowerController[baseTowers.Length];
-		for (int i = 0; i < visualTowers.Length; i++)
+		visualTowers = new ElementTowerCollection();
+		for (int i = 0; i < baseTowers.Collection.Length; i++)
 		{
-			visualTowers[i] = Instantiate(baseTowers[i]);
-			visualTowers[i].fireRange = 0;
-			visualTowers[i].name = baseTowers[i].name;
-			visualTowers[i].gameObject.SetActive(false);
+			visualTowers.Collection[i] = Instantiate(baseTowers.Collection[i]);
+			visualTowers.Collection[i].name = baseTowers.Collection[i].name;
+			visualTowers.Collection[i].gameObject.SetActive(false);
 		}
 	}
 
@@ -232,7 +231,7 @@ public class TowerManager : MonoBehaviour
 	private void BuildBaseTower(Tile tile, Element element)
 	{
 		if (tile.transform == null) return;
-		TowerController tower = Instantiate(baseTowers[(int)element], tile.transform);
+		TowerController tower = Instantiate(baseTowers.GetAttribute(element), tile.transform);
 		tower.Initialize(2.5f, element, canTowersFire);
 		tower.transform.localPosition = new Vector3(0, 0.5f, 0);
 		towersPlaced.Add(tile, tower);

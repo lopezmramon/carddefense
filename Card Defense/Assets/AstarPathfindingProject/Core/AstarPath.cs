@@ -770,7 +770,7 @@ public class AstarPath : VersionedMonoBehaviour {
 		// not repaint events to make sure that the gizmos do not interfere with any kind of scene picking.
 		// This will not have any visual impact as only repaint events will result in any changes on the screen.
 		// From testing it seems the only events that can happen during OnDrawGizmos are the mouseUp and repaint events.
-		if (Event.current.type != EventType.Repaint) return;
+		if (Event.current == null || Event.current.type != EventType.Repaint) return;
 
 		colorSettings.PushToStatic(this);
 

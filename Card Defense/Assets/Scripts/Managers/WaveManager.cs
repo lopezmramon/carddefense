@@ -51,36 +51,6 @@ public class WaveManager : MonoBehaviour
 		currentLevel = level;
 		startingPoints = currentLevel.mapData.GetStartingPoints().ToArray();
 		endingPoints = currentLevel.mapData.GetEndingPoints().ToArray();
-		CalculatePaths();
-	}
-
-	private void CalculatePaths()
-	{
-		startingPointIndex = 0;
-		endingPointIndex = 0;
-		Path path = ABPath.Construct(startingPoints[0].Vector3FromCoordinates, endingPoints[0].Vector3FromCoordinates, OnPathCalculationDone);
-		AstarPath.StartPath(path);
-	}
-
-	private void OnPathCalculationDone(Path path)
-	{
-		if (path.CompleteState == PathCompleteState.Complete)
-		{
-			paths.Add(path);
-			endingPointIndex++;
-			if (endingPointIndex >= endingPoints.Length)
-			{
-				endingPointIndex = 0;
-				startingPointIndex++;
-			}
-			if (startingPointIndex >= startingPoints.Length) return;
-			Path nextPath = ABPath.Construct(startingPoints[startingPointIndex].Vector3FromCoordinates, endingPoints[endingPointIndex].Vector3FromCoordinates, OnPathCalculationDone);
-			AstarPath.StartPath(nextPath);
-		}
-		else if (path.CompleteState == PathCompleteState.Error)
-		{
-			Debug.Log(path.error.ToString());
-		}
 	}
 
 	private void ManageWave()
@@ -88,12 +58,12 @@ public class WaveManager : MonoBehaviour
 		if (currentEnemyIndex < currentWave.enemies.Count)
 		{
 			Enemy enemy = currentWave.enemies[currentEnemyIndex];
-			int randomPathIndex = UnityEngine.Random.Range(0, paths.Count);
-			DispatchEnemySpawnRequestEvent(enemy.enemyType, enemy.specialAbility, paths[randomPathIndex]);
+			enemy.waveIndex = currentEnemyIndex;
+			enemy.totalWaveEnemies = currentWave.enemies.Count;
+			DispatchEnemySpawnRequestEvent(enemy, startingPoints,endingPoints);
 		}
 		if (currentEnemyIndex >= currentWave.enemies.Count - 1)
 		{
-			CalculatePaths();
 			DispatchLastEnemyInWaveSpawnedEvent();
 		}
 		currentEnemyIndex++;
@@ -111,9 +81,9 @@ public class WaveManager : MonoBehaviour
 		}
 	}
 
-	private void DispatchEnemySpawnRequestEvent(EnemyType enemyType, EnemySpecialAbility specialAbility, Path path)
+	private void DispatchEnemySpawnRequestEvent(Enemy enemy, Tile[] startingPoints, Tile[] endingPoints)
 	{
-		CodeControl.Message.Send(new EnemySpawnRequestEvent(enemyType, specialAbility, path));
+		CodeControl.Message.Send(new EnemySpawnRequestEvent(enemy, startingPoints, endingPoints));
 	}
 
 	private void DispatchLastEnemyInWaveSpawnedEvent()

@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+[Serializable]
 public class TowerController : MonoBehaviour, IPointerDownHandler
 {
-	private Tower tower;
-	public Tower GetTower { get { return tower; } }
+	public Tower Tower { get { return new Tower(transform, elements, propertyModifierHandler); } }
 	private float progress;
-	public float fireRate, fireCountdown, fireRange, rotationSpeed = 10f, buildTime, lerpElapsedTime;
+	private float fireRate, fireCountdown, fireRange, rotationSpeed = 100f, buildTime, lerpElapsedTime;
 	public Material[] buildMaterials;
 	private Material finalMaterial;
 	public Renderer[] renderers;
@@ -51,10 +50,10 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 
 	private void GenerateTargetObject()
 	{
-		targetController = Instantiate(targetControllerPrefab);
+		targetController = Instantiate(targetControllerPrefab, transform);
 		Vector3 initialTargetPosition = projectileOrigin.transform.position;
 		initialTargetPosition.y = 0;
-		targetController.Initialize(initialTargetPosition, elements.ToArray());
+		targetController.Initialize(initialTargetPosition, projectileOrigin.position, fireRange, elements.ToArray());
 	}
 
 	public void DeactivateTarget()
@@ -65,6 +64,7 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 	public void ActivateTarget()
 	{
 		if (targetController != null) targetController.Activate();
+		targetController.SetMaxDistance(fireRange);
 	}
 
 	private void Update()
@@ -80,8 +80,12 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 		{
 			DetectEnemies();
 		}
-		ShootingCountdown();
 		propertyModifierHandler.PropertyCountdowns();
+	}
+
+	private void FixedUpdate()
+	{
+		ShootingCountdown();
 	}
 
 	private void ShootingCountdown()
@@ -89,7 +93,7 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 		if (!canFire) return;
 		if (fireCountdown >= 0)
 		{
-			fireCountdown -= Time.deltaTime * GameManager.gameSpeedMultiplier;
+			fireCountdown -= Time.fixedDeltaTime * GameManager.gameSpeedMultiplier;
 		}
 		else
 		{
@@ -103,15 +107,13 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 		if (building) return;
 		switch (towerTargeting)
 		{
+			case TowerTargeting.NoTarget:
 			case TowerTargeting.Direct:
 				if (target == null) return;
 				DispatchShootProjectileRequestEvent(target);
 				break;
 			case TowerTargeting.Ground:
 				DispatchShootProjectileRequestEvent(targetController.transform);
-				break;
-			case TowerTargeting.NoTarget:
-				DispatchShootProjectileRequestEvent(null);
 				break;
 		}
 		animator.SetTrigger("Shoot");
@@ -189,12 +191,11 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 	{
 		switch (towerTargeting)
 		{
+			case TowerTargeting.NoTarget:
 			case TowerTargeting.Direct:
 				target = enemyToTarget;
 				break;
 			case TowerTargeting.Ground:
-				break;
-			case TowerTargeting.NoTarget:
 				break;
 		}
 	}
@@ -220,6 +221,9 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 	{
 		this.canFire = canFire;
 		Build(buildTime, initialElement);
+		fireRate = ElementUtility.BaseElementFireRate(initialElement);
+		fireCountdown = fireRate;
+		fireRange = ElementUtility.BaseTowerRange(initialElement);
 		SetupTargeting();
 	}
 
@@ -246,11 +250,19 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 	internal void Upgrade(Element element)
 	{
 		elements.Enqueue(element);
+		CheckAttributes();
 		DispatchTowerUpgradedEvent();
+	}
+
+	private void CheckAttributes()
+	{
+		fireRate = ElementUtility.FireRate(elements.ToArray());
+		fireRange = ElementUtility.TowerRange(elements.ToArray());
 	}
 
 	public void OnPointerDown(PointerEventData eventData)
 	{
+		if (building) return;
 		if (eventData.button == PointerEventData.InputButton.Left)
 		{
 			if (towerTargeting == TowerTargeting.Ground)
@@ -268,7 +280,7 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 
 	private void DispatchTowerInfoUIDisplayRequestEvent()
 	{
-		CodeControl.Message.Send(new TowerInfoUIDisplayRequestEvent(this));
+		CodeControl.Message.Send(new TowerInfoUIDisplayRequestEvent(Tower));
 	}
 
 	private void DispatchSellTowerRequestEvent()
@@ -285,9 +297,9 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 	{
 		CodeControl.Message.Send(new DisplayParabolaRequestEvent(
 			projectileOrigin,
-			ElementUtility.SpeedFromElements(elements.ToArray()),
+			ElementUtility.ProjectileSpeed(elements.ToArray()),
 			projectileOrigin.position.y, 0,
-			ElementUtility.BouncesFromElements(elements.ToArray()),
+			ElementUtility.Bounces(elements.ToArray()),
 			targetController.transform));
 	}
 
@@ -298,7 +310,7 @@ public class TowerController : MonoBehaviour, IPointerDownHandler
 
 	private void DispatchTowerUpgradedEvent()
 	{
-		CodeControl.Message.Send(new TowerUpgradedEvent());
+		CodeControl.Message.Send(new TowerUpgradedEvent(Tower));
 	}
 
 	private void DispatchShootProjectileRequestEvent(Transform target)

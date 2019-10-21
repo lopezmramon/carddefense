@@ -15,13 +15,13 @@ public class EnemySpawnManager : MonoBehaviour
 
 	private void OnEnemySpawnRequested(EnemySpawnRequestEvent obj)
 	{
-		SpawnEnemy(obj.enemy, obj.Path);
+		SpawnEnemy(obj.enemy, obj.startingPoints,obj.endingPoints);
 	}
 
-	private void SpawnEnemy(Enemy enemy, Path path)
+	private void SpawnEnemy(Enemy enemy, Tile[] startingPoints, Tile[] endingPoints)
 	{
 		EnemyController enemyController = Instantiate(enemyPrefabs[(int)enemy.enemyType]);
-		enemyController.Initialize(enemy, path);
+		enemyController.Initialize(enemy, startingPoints,endingPoints);
 		DispatchEnemySpawnedEvent(enemyController);
 	}
 

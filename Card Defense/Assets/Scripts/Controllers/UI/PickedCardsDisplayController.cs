@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PickedCardsDisplayController : MonoBehaviour
 {
-	public Text neededCards, flavor;
+	public TextMeshProUGUI neededCards, flavor;
 	public Button confirm;
 	private bool unrestricted;
 	private float value;

@@ -5,7 +5,7 @@ public class ProjectileController : MonoBehaviour
 {
 	private ProjectileMover projectileMover;
 	private Projectile projectile;
-	public float damage, aoe, speed;
+	private float damage, speed;
 	private int bouncesLeft, chainLength;
 	private ProjectileMovementType primaryMovementType;
 	private AOEDamageDealer AOEDamageDealer;
@@ -13,25 +13,26 @@ public class ProjectileController : MonoBehaviour
 	internal void Initialize(Projectile projectile)
 	{
 		Element[] projectileElements = projectile.elements.ToArray();
-		bouncesLeft = ElementUtility.BouncesFromElements(projectileElements);
-		chainLength = ElementUtility.ChainLengthFromElements(projectileElements);
-		speed = ElementUtility.SpeedFromElements(projectileElements);
-		AOEDamageDealer = new AOEDamageDealer(ElementUtility.AOEFromElements(projectileElements) * projectile.areaOfEffectMultiplier, transform, projectile.elements);
-		primaryMovementType = ElementUtility.MovementForElement(projectile.elements.Peek());
+		damage = ElementUtility.ProjectileDamage(projectileElements);
+		bouncesLeft = ElementUtility.Bounces(projectileElements);
+		chainLength = ElementUtility.ChainLength(projectileElements);
+		speed = ElementUtility.ProjectileSpeed(projectileElements);
+		AOEDamageDealer = new AOEDamageDealer(ElementUtility.AoE(projectileElements) * projectile.areaOfEffectMultiplier, transform, projectile.elements);
+		primaryMovementType = ElementUtility.Movement(projectile.elements.Peek());
 		this.projectile = projectile;
 		switch (primaryMovementType)
 		{
 			case ProjectileMovementType.BounceOnGround:
-
 				Parabola[] parabolas = ParabolaCalculator.CalculateFullTrajectory(transform.position, projectile.target.position,
-					ElementUtility.SpeedFromElements(projectileElements), transform.position.y, 0, bouncesLeft);
-				projectileMover = new ProjectileMover(transform, parabolas, ElementUtility.SpeedFromElements(projectile.elements.ToArray()) * projectile.speedMultiplier);
+					ElementUtility.ProjectileSpeed(projectileElements), transform.position.y, 0, bouncesLeft);
+				projectileMover = new ProjectileMover(transform, parabolas, ElementUtility.ProjectileSpeed(projectile.elements.ToArray()) * projectile.speedMultiplier);
 				break;
 			case ProjectileMovementType.StraightChain:
-				projectileMover = new ProjectileMover(transform, projectile.target, ElementUtility.SpeedFromElements(projectile.elements.ToArray()) * projectile.speedMultiplier);
+				projectileMover = new ProjectileMover(transform, projectile.target, ElementUtility.ProjectileSpeed(projectile.elements.ToArray()) * projectile.speedMultiplier);
 				break;
 			case ProjectileMovementType.AOEAtTower:
-				projectileMover = new ProjectileMover(projectile.speedMultiplier * speed);
+				projectileMover = new ProjectileMover(projectile.speedMultiplier * speed, 0, transform);
+				OnAOEAtTowerActivation();
 				break;
 		}
 	}
@@ -65,23 +66,26 @@ public class ProjectileController : MonoBehaviour
 					}
 					else
 					{
-						Destroy(gameObject);
+						ContinueChain();
 					}
 				});
 				break;
 			case ProjectileMovementType.AOEAtTower:
-				OnAOEAtTowerActivation();
+				//projectileMover.CheckAOEAtTowerTimer(OnAOEAtTowerActivation);
 				break;
 		}
 	}
 
 	private void ContinueChain()
 	{
+		if (primaryMovementType != ProjectileMovementType.StraightChain)
+		{
+			primaryMovementType = ProjectileMovementType.StraightChain;
+		}
 		projectileMover.reassigning = true;
 		if (chainLength > 0)
 		{
-			string targetName = projectileMover.target == null ? string.Empty : projectileMover.target.name;
-			Transform closestEnemy = AOEDamageDealer.ClosestEnemy(transform.position, targetName);
+			Transform closestEnemy = AOEDamageDealer.ClosestEnemy(transform.position, projectileMover.target, 5f);
 			if (closestEnemy == null)
 			{
 				Destroy(gameObject);
@@ -95,7 +99,25 @@ public class ProjectileController : MonoBehaviour
 		}
 		else
 		{
+			CheckBouncesLeft();
+		}
+	}
+
+	private void CheckBouncesLeft()
+	{
+		if (bouncesLeft <= 0)
+		{
 			Destroy(gameObject);
+		}
+		else
+		{
+			Vector3 bounceTargetPosition = transform.position + transform.forward*2f;
+			bounceTargetPosition.y = 0;
+			bounceTargetPosition.x += 0.1f;
+			Parabola[] parabolas = ParabolaCalculator.CalculateFullTrajectory(transform.position, bounceTargetPosition,
+	ElementUtility.ProjectileSpeed(projectile.elements.ToArray()), transform.position.y + 1f, 0, bouncesLeft);
+			projectileMover.SetParabolas(parabolas);
+			primaryMovementType = ProjectileMovementType.BounceOnGround;
 		}
 	}
 
@@ -103,7 +125,7 @@ public class ProjectileController : MonoBehaviour
 	{
 		AOEDamageDealer.DealAOEDamage(damage);
 		DispatchElementContactParticleRequestEvent(AOEDamageDealer.EnemyPositionsNearPointWithCurrentAOE(transform.position));
-		Destroy(gameObject);
+		ContinueChain();
 	}
 
 	private void AnalyzeBounceResult()
@@ -117,6 +139,7 @@ public class ProjectileController : MonoBehaviour
 			AOEDamageDealer.DealAOEDamage(damage);
 			DispatchElementContactParticleRequestEvent(AOEDamageDealer.EnemyPositionsNearPointWithCurrentAOE(transform.position));
 		}
+		bouncesLeft--;
 	}
 
 	private void DispatchGroundHazardPlacementRequestEvent(Projectile projectile, Vector3 position)

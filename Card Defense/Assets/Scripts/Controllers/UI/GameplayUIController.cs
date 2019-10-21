@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class GameplayUIController : MonoBehaviour
 {
-	public Text livesLeft, currentTowerBuildingResource, timeBetweenWaves, gameSpeed, countdown;
+	public TextMeshProUGUI livesLeft, currentTowerBuildingResource, timeBetweenWaves, gameSpeed, countdown;
 	public Button emptyHand, redrawHand;
 
 	private void Awake()

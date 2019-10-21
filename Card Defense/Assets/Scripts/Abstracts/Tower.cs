@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class Tower 
 {
-	public float fireRate, range;
+	public Transform transform;
 	public Queue<Element> elements;
+	public PropertyModifierHandler modifierHandler;
 
+	public Tower(Transform transform, Queue<Element> elements, PropertyModifierHandler modifierHandler)
+	{
+		this.transform = transform;
+		this.elements = elements;
+		this.modifierHandler = modifierHandler;
+	}
 }

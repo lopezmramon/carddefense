@@ -799,6 +799,7 @@ MonoBehaviour:
   speed: 1.5
   enemyType: 1
   livesCost: 1
+  visualEnemy: {fileID: 3131936951413971013}
 --- !u!114 &-5370290705508866636
 MonoBehaviour:
   m_ObjectHideFlags: 0

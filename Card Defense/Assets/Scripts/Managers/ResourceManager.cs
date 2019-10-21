@@ -31,7 +31,7 @@ public class ResourceManager : MonoBehaviour
 
 	private void OnTowerSold(TowerSoldEvent obj)
 	{
-		ChangeResource(ElementUtility.ResourceRefundForSellingElements(obj.tower.elements.ToArray()));
+		ChangeResource(ElementUtility.SaleValue(obj.tower.elements.ToArray()));
 	}
 
 	private void OnInfiniteResourcePowerupActivated(InfiniteResourcePowerupActivatedEvent obj)
