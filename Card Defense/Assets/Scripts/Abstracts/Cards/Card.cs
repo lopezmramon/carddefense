@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
+
 [System.Serializable]
 public class Card
 {
+	public int index;
 	public string name;
 	public CardType cardType;
 	public Element element;

@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class CardManager : MonoBehaviour
 {
+	public static List<CardContainer> baseCardContainers = new List<CardContainer>();
+	private Deck<Card> deck;
 	public CardData cardData;
 	private CardSpriteLoader spriteLoader;
 	public CardContainer cardContainerPrefab;
-	public static List<CardContainer> baseCardContainers = new List<CardContainer>();
 	public Transform cardContainerPoolParent, hand, pickedCardsDisplayLocation;
 	private CardContainer grabbedCard;
 	private HandModifierAnalyzer handModifierAnalyzer;
@@ -31,6 +32,23 @@ public class CardManager : MonoBehaviour
 		CodeControl.Message.AddListener<CardPickStartRequestEvent>(OnCardPickStartRequested);
 		CodeControl.Message.AddListener<ConfirmCardsPickedRequestEvent>(OnPickedCardsConfirmed);
 		CodeControl.Message.AddListener<CardSellProcessBeginRequestEvent>(OnCardSellProcessBeginRequested);
+		CodeControl.Message.AddListener<DeckPickedEvent>(OnDeckPicked);
+	}
+
+	private void OnDeckPicked(DeckPickedEvent obj)
+	{
+		FillDeck(obj.deck);
+	}
+
+	private void FillDeck(CardDeck deck)
+	{
+		List<Card> cards = new List<Card>();
+		for (int i = 0; i < deck.cardIndexes.Count; i++)
+		{
+			cards.Add(cardData.cards[deck.cardIndexes[i]]);
+		}
+		this.deck = new Deck<Card>(cards);
+		DrawRandomCards(5);
 	}
 
 	private void OnCardSellProcessBeginRequested(CardSellProcessBeginRequestEvent obj)
@@ -77,7 +95,7 @@ public class CardManager : MonoBehaviour
 
 	private void OnDrawRandomCardsRequested(DrawRandomCardsRequestEvent obj)
 	{
-		DrawRandomCards(obj.amount);
+		DrawCards(obj.amount);
 	}
 
 	private void OnCardGrabbed(CardGrabbedEvent obj)
@@ -141,7 +159,20 @@ public class CardManager : MonoBehaviour
 		DispatchCardPickedEvent(card, false, cardsToPick - pickedCards.Count);
 	}
 
-	public void DrawRandomCards(int amount)
+	public void DrawCards(int amount)
+	{
+		List<Card> cardsToDraw = deck.Draw(amount);
+		for (int i = 0; i < cardsToDraw.Count; i++)
+		{
+			CardContainer cardToInstantiate = baseCardContainers.Find(x => x.card == cardsToDraw[i]);
+			CardContainer card = Instantiate(cardToInstantiate, hand);
+			DispatchCardDrawnEvent(card);
+			card.name = card.cardName.text;
+			card.gameObject.SetActive(true);
+		}
+	}
+
+	private void DrawRandomCards(int amount)
 	{
 		for (int i = 0; i < amount; i++)
 		{
@@ -159,11 +190,11 @@ public class CardManager : MonoBehaviour
 		cardContainer.Initialize(card);
 		baseCardContainers.Add(cardContainer);
 		cardContainer.gameObject.SetActive(false);
-		DispatchCardDrawnEvent(cardContainer);
 	}
 
 	private void ConsumeCard(CardContainer card)
 	{
+		deck.DiscardCard(card.card);
 		card.Discard();
 		DispatchCardConsumedEvent(card);
 	}
@@ -188,7 +219,7 @@ public class CardManager : MonoBehaviour
 
 	private void DispatchCardDrawnEvent(CardContainer card)
 	{
-		CodeControl.Message.Send(new CardDrawnEvent(card));
+		CodeControl.Message.Send(new CardDrawnEvent(card, deck.CardsInDrawPile));
 	}
 
 	private void DispatchEmptyHandRequestEvent()
@@ -198,7 +229,7 @@ public class CardManager : MonoBehaviour
 
 	private void DispatchCardConsumedEvent(CardContainer card)
 	{
-		CodeControl.Message.Send(new CardConsumedEvent(card));
+		CodeControl.Message.Send(new CardConsumedEvent(card, deck.CardsInDiscardPile));
 	}
 
 	private void DispatchResourceChangeRequestEvent(int amount)

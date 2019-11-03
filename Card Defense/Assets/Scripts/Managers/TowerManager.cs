@@ -180,7 +180,7 @@ public class TowerManager : MonoBehaviour
 
 	private void PlaceVisualTowerAtTile(Tile tile, Element element)
 	{
-		TowerController visualTower = visualTowers.GetAttribute(element);
+		TowerController visualTower = visualTowers[element];
 		visualTower.gameObject.SetActive(true);
 		visualTower.transform.SetParent(tile.transform);
 		visualTower.transform.localPosition = new Vector3(0, 0.5f, 0);
@@ -231,7 +231,7 @@ public class TowerManager : MonoBehaviour
 	private void BuildBaseTower(Tile tile, Element element)
 	{
 		if (tile.transform == null) return;
-		TowerController tower = Instantiate(baseTowers.GetAttribute(element), tile.transform);
+		TowerController tower = Instantiate(baseTowers[element], tile.transform);
 		tower.Initialize(2.5f, element, canTowersFire);
 		tower.transform.localPosition = new Vector3(0, 0.5f, 0);
 		towersPlaced.Add(tile, tower);

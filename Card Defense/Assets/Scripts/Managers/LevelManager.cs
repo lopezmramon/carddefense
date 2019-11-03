@@ -8,20 +8,38 @@ public class LevelManager : MonoBehaviour
 {
 	public Level[] levels;
 	public static Level currentLevel;
+	private int selectedLevel;
 
 	private void Awake()
 	{
 		CodeControl.Message.AddListener<GenerateLevelRequestEvent>(OnLevelGenerateRequested);
+		CodeControl.Message.AddListener<LevelSelectedEvent>(OnLevelSelected);
 	}
 
-	private void OnLevelGenerateRequested(GenerateLevelRequestEvent obj)
+	private void OnLevelSelected(LevelSelectedEvent obj)
 	{
-		currentLevel = levels[obj.levelIndex];
+		selectedLevel = obj.levelIndex;
 	}
 
 	private void Start()
 	{
-		currentLevel = levels[0];
+		LoadLevels();
+	}
+
+	private void LoadLevels()
+	{
+		levels = Resources.LoadAll<Level>("Levels");
+		DispatchLevelsLoadedEvent();
+	}
+
+	private void DispatchLevelsLoadedEvent()
+	{
+		CodeControl.Message.Send(new LevelsLoadedEvent(levels));
+	}
+
+	private void OnLevelGenerateRequested(GenerateLevelRequestEvent obj)
+	{
+		currentLevel = levels[obj.generateAlreadySelected ? selectedLevel : obj.levelIndex];
 		CodeControl.Message.Send(new GenerateTilesRequestEvent(currentLevel));
 	}
 }

@@ -1,8 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+﻿using System.Collections.Generic;
+[System.Serializable]
 public class CardDeck 
 {
-	public List<Card> cards = new List<Card>();
+	public List<int> cardIndexes = new List<int>();
+	public string name;
+
+	public CardDeck(List<int> cardIndexes)
+	{
+		this.cardIndexes = cardIndexes;
+	}
 }

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Bigger Level
   theme: 5
+  sprite: {fileID: 21300000, guid: b1a8fd57e763442469d844016e7a4816, type: 3}
   mapData:
     tiles:
     - x: 0
@@ -622,124 +623,319 @@ MonoBehaviour:
   - enemies:
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
-    - enemyType: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
+    - enemyType: 5
       specialAbility: 0
-      livesCost: 0
-    - enemyType: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
+    - enemyType: 4
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
   - enemies:
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
   - enemies:
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
   - enemies:
     - enemyType: 5
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 5
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 5
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 5
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 5
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 5
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
   - enemies:
     - enemyType: 3
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 3
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 3
       specialAbility: 2
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 3
       specialAbility: 2
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 3
       specialAbility: 2
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 3
       specialAbility: 2
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 3
       specialAbility: 2
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
   lives: 50
   startingTowerBuildingResource: 500

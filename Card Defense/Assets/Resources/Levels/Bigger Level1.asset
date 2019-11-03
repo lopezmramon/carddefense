@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Bigger Level1
   theme: 7
+  sprite: {fileID: 21300002, guid: a67c36ec0d21a42bf96dfa94da545744, type: 3}
   mapData:
     tiles:
     - x: 0
@@ -923,6 +924,7 @@ MonoBehaviour:
     - enemyType: 2
       specialAbility: 5
       waveIndex: 0
+      totalWaveEnemies: 0
       transform: {fileID: 0}
       maxHealth: 0
       currentHealth: 0
@@ -930,6 +932,7 @@ MonoBehaviour:
     - enemyType: 2
       specialAbility: 5
       waveIndex: 0
+      totalWaveEnemies: 0
       transform: {fileID: 0}
       maxHealth: 0
       currentHealth: 0
@@ -937,6 +940,7 @@ MonoBehaviour:
     - enemyType: 2
       specialAbility: 5
       waveIndex: 0
+      totalWaveEnemies: 0
       transform: {fileID: 0}
       maxHealth: 0
       currentHealth: 0
@@ -944,6 +948,7 @@ MonoBehaviour:
     - enemyType: 2
       specialAbility: 5
       waveIndex: 0
+      totalWaveEnemies: 0
       transform: {fileID: 0}
       maxHealth: 0
       currentHealth: 0
@@ -952,6 +957,7 @@ MonoBehaviour:
     - enemyType: 5
       specialAbility: 0
       waveIndex: 0
+      totalWaveEnemies: 0
       transform: {fileID: 0}
       maxHealth: 0
       currentHealth: 0
@@ -959,6 +965,7 @@ MonoBehaviour:
     - enemyType: 2
       specialAbility: 5
       waveIndex: 0
+      totalWaveEnemies: 0
       transform: {fileID: 0}
       maxHealth: 0
       currentHealth: 0
@@ -966,6 +973,7 @@ MonoBehaviour:
     - enemyType: 2
       specialAbility: 5
       waveIndex: 0
+      totalWaveEnemies: 0
       transform: {fileID: 0}
       maxHealth: 0
       currentHealth: 0
@@ -973,6 +981,7 @@ MonoBehaviour:
     - enemyType: 2
       specialAbility: 5
       waveIndex: 0
+      totalWaveEnemies: 0
       transform: {fileID: 0}
       maxHealth: 0
       currentHealth: 0
@@ -980,6 +989,7 @@ MonoBehaviour:
     - enemyType: 0
       specialAbility: 5
       waveIndex: 0
+      totalWaveEnemies: 0
       transform: {fileID: 0}
       maxHealth: 0
       currentHealth: 0
@@ -987,6 +997,7 @@ MonoBehaviour:
     - enemyType: 0
       specialAbility: 5
       waveIndex: 0
+      totalWaveEnemies: 0
       transform: {fileID: 0}
       maxHealth: 0
       currentHealth: 0

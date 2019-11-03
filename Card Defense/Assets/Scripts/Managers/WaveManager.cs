@@ -8,7 +8,8 @@ public class WaveManager : MonoBehaviour
 {
 	private Level currentLevel;
 	private Wave currentWave;
-	private int currentWaveIndex, currentEnemyIndex, startingPointIndex, endingPointIndex;
+	public static int currentWaveIndex =0;
+	private int currentEnemyIndex, startingPointIndex, endingPointIndex;
 	private Tile[] startingPoints, endingPoints;
 	public List<Path> paths = new List<Path>();
 
@@ -21,6 +22,11 @@ public class WaveManager : MonoBehaviour
 	private void OnNextWaveStartRequested(NextWaveStartRequestEvent obj)
 	{
 		StartNextWave();
+	}
+
+	private void OnLevelReady(LevelReadyEvent obj)
+	{
+		SetupForLevel(obj.level);
 	}
 
 	private void StartNextWave()
@@ -37,12 +43,7 @@ public class WaveManager : MonoBehaviour
 		{
 			DispatchAllWavesFinishedEvent();
 		}
-	}
-
-	private void OnLevelReady(LevelReadyEvent obj)
-	{
-		SetupForLevel(obj.level);
-	}
+	}	
 
 	private void SetupForLevel(Level level)
 	{

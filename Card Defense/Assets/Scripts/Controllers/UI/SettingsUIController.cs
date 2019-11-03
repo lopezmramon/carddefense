@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System;
 
 public class SettingsUIController : MonoBehaviour
 {
-	public Dropdown resolutionsDropdown, windowModeDropdown, qualitySettingsDropdown;
-	public Button resolutionButton, windowModeButton, qualityButton;
+	public TMP_Dropdown resolutionsDropdown, windowModeDropdown, qualitySettingsDropdown;
+	public Button resolution, windowMode, quality, close;
 
 	private void Awake()
 	{
@@ -33,21 +35,26 @@ public class SettingsUIController : MonoBehaviour
 
 	private void SetupButtons()
 	{
-		resolutionButton.onClick.AddListener(() =>
+		resolution.onClick.AddListener(() =>
 		{
 			SetResolution(resolutionsDropdown.value);
 		});
 
-		windowModeButton.onClick.AddListener(() =>
+		windowMode.onClick.AddListener(() =>
 		{
 			Screen.fullScreen = windowModeDropdown.value == 0;
 			PlayerPrefs.SetInt("Fullscreen", windowModeDropdown.value);
 		});
 
-		qualitySettingsDropdown.onValueChanged.AddListener((value) =>
+		quality.onClick.AddListener(() =>
 		{
 			QualitySettings.SetQualityLevel(qualitySettingsDropdown.value);
 			PlayerPrefs.SetInt("Quality", qualitySettingsDropdown.value);
+		});
+
+		close.onClick.AddListener(() =>
+		{
+			DispatchChangeViewRequestEvent();
 		});
 	}
 
@@ -65,10 +72,10 @@ public class SettingsUIController : MonoBehaviour
 
 	private void SetResolutionsDropdownOptions()
 	{
-		List<Dropdown.OptionData> resolutionDropdownOptions = new List<Dropdown.OptionData>();
+		List<TMP_Dropdown.OptionData> resolutionDropdownOptions = new List<TMP_Dropdown.OptionData>();
 		foreach (Resolution resolution in Screen.resolutions)
 		{
-			resolutionDropdownOptions.Add(new Dropdown.OptionData(resolution.ToString()));
+			resolutionDropdownOptions.Add(new TMP_Dropdown.OptionData(resolution.ToString()));
 		}
 		resolutionsDropdown.AddOptions(resolutionDropdownOptions);
 		if (PlayerPrefs.HasKey("Resolution"))
@@ -89,19 +96,19 @@ public class SettingsUIController : MonoBehaviour
 
 	private void SetWindowModeDropdownOptions()
 	{
-		List<Dropdown.OptionData> windowModeDropdownOptions = new List<Dropdown.OptionData>();
-		windowModeDropdownOptions.Add(new Dropdown.OptionData("Fullscreen"));
-		windowModeDropdownOptions.Add(new Dropdown.OptionData("Windowed"));
+		List<TMP_Dropdown.OptionData> windowModeDropdownOptions = new List<TMP_Dropdown.OptionData>();
+		windowModeDropdownOptions.Add(new TMP_Dropdown.OptionData("Fullscreen"));
+		windowModeDropdownOptions.Add(new TMP_Dropdown.OptionData("Windowed"));
 		windowModeDropdown.AddOptions(windowModeDropdownOptions);
 		windowModeDropdown.value = PlayerPrefs.GetInt("Fullscreen");
 	}
 
 	private void SetQualitySettingsDropdownOptions()
 	{
-		List<Dropdown.OptionData> qualitySettingsDropdownOptions = new List<Dropdown.OptionData>();
+		List<TMP_Dropdown.OptionData> qualitySettingsDropdownOptions = new List<TMP_Dropdown.OptionData>();
 		foreach (string level in QualitySettings.names)
 		{
-			qualitySettingsDropdownOptions.Add(new Dropdown.OptionData(level));
+			qualitySettingsDropdownOptions.Add(new TMP_Dropdown.OptionData(level));
 		}
 		qualitySettingsDropdown.AddOptions(qualitySettingsDropdownOptions);
 		if (PlayerPrefs.HasKey("Quality"))
@@ -112,5 +119,10 @@ public class SettingsUIController : MonoBehaviour
 		{
 			qualitySettingsDropdown.value = (int)QualitySettings.GetQualityLevel();
 		}
+	}
+
+	private void DispatchChangeViewRequestEvent()
+	{
+		CodeControl.Message.Send(new ChangeViewRequestEvent(View.Settings, View.Back, true));
 	}
 }

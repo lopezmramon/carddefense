@@ -6,6 +6,7 @@
 	{
 		this.cards = cards;
 	}
+
 	public CardsConsumeRequestEvent(CardContainer card)
 	{
 		cards = new CardContainer[] { card };

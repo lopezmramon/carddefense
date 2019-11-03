@@ -13,12 +13,19 @@ public class InfoUIManager : MonoBehaviour
 	private EnemyInfoUIController enemyInfoUIController;
 	public ContextMenuController contextMenuControllerPrefab;
 	private ContextMenuController contextMenuController;
+	private List<Wave> waves;
 
 	private void Awake()
 	{
 		CodeControl.Message.AddListener<TowerInfoUIDisplayRequestEvent>(OnTowerInfoUIDisplayRequested);
 		CodeControl.Message.AddListener<WaveInfoUIDisplayRequestEvent>(OnWaveInfoUIDisplayRequested);
 		CodeControl.Message.AddListener<EnemyInfoUIDisplayRequestEvent>(OnEnemyInfoUIDisplayRequested);
+		CodeControl.Message.AddListener<LevelReadyEvent>(OnLevelReady);
+	}
+
+	private void OnLevelReady(LevelReadyEvent obj)
+	{
+		waves = obj.level.waves;
 	}
 
 	private void OnTowerInfoUIDisplayRequested(TowerInfoUIDisplayRequestEvent obj)
@@ -28,7 +35,7 @@ public class InfoUIManager : MonoBehaviour
 
 	private void OnWaveInfoUIDisplayRequested(WaveInfoUIDisplayRequestEvent obj)
 	{
-		GenerateWaveInfoUI(obj.wave);
+		GenerateWaveInfoUI();
 	}
 
 	private void OnEnemyInfoUIDisplayRequested(EnemyInfoUIDisplayRequestEvent obj)
@@ -44,11 +51,11 @@ public class InfoUIManager : MonoBehaviour
 		enemyInfoUIController.Initialize(enemy);
 	}
 
-	private void GenerateWaveInfoUI(Wave wave)
+	private void GenerateWaveInfoUI()
 	{
 		if(waveInfoUIController == null)
 		waveInfoUIController = Instantiate(waveInfoUIControllerPrefab, transform);
-		waveInfoUIController.Initialize(wave);
+		waveInfoUIController.Initialize(waves);
 	}
 
 	private void GenerateTowerInfoUI(Tower tower)
@@ -56,9 +63,7 @@ public class InfoUIManager : MonoBehaviour
 		if(towerInfoUIController == null)
 		{
 			towerInfoUIController = Instantiate(towerInfoUIControllerPrefab, transform);
-		//towerInfoUIController.transform.position = new Vector3()
 		}
-
 		towerInfoUIController.Initialize(tower);
 	}
 }

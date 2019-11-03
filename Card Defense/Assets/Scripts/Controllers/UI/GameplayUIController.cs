@@ -8,6 +8,7 @@ public class GameplayUIController : MonoBehaviour
 {
 	public TextMeshProUGUI livesLeft, currentTowerBuildingResource, timeBetweenWaves, gameSpeed, countdown;
 	public Button emptyHand, redrawHand;
+	public VisualDeckController draw, discard;
 
 	private void Awake()
 	{
@@ -18,6 +19,30 @@ public class GameplayUIController : MonoBehaviour
 		CodeControl.Message.AddListener<GameSpeedChangedEvent>(OnGameSpeedChanged);
 		CodeControl.Message.AddListener<ResourceChangedEvent>(OnResourceChanged);
 		CodeControl.Message.AddListener<CountdownStartedEvent>(OnCountdownStarted);
+		CodeControl.Message.AddListener<DeckPickedEvent>(OnDeckPicked);
+		CodeControl.Message.AddListener<CardDrawnEvent>(OnCardDrawn);
+		CodeControl.Message.AddListener<CardConsumedEvent>(OnCardConsumed);
+		SetupButtons();		
+	}
+
+	private void OnCardConsumed(CardConsumedEvent obj)
+	{
+		discard.SetAmountLeft(obj.cardsLeftInDiscardPile);
+	}
+
+	private void OnCardDrawn(CardDrawnEvent obj)
+	{
+		draw.SetAmountLeft(obj.cardsLeftInDrawPile);
+	}
+
+	private void OnDeckPicked(DeckPickedEvent obj)
+	{
+		draw.Initialize(null);
+		discard.Initialize(null);
+	}
+
+	private void SetupButtons()
+	{
 		emptyHand.onClick.AddListener(() =>
 		{
 			CodeControl.Message.Send(new EmptyHandRequestEvent());
@@ -101,5 +126,10 @@ public class GameplayUIController : MonoBehaviour
 	public void DispatchNextWaveRequestEvent()
 	{
 		CodeControl.Message.Send(new HurryNextWaveRequestEvent());
+	}
+
+	public void DispatchWaveInfoUIRequestEvent()
+	{
+		CodeControl.Message.Send(new WaveInfoUIDisplayRequestEvent());
 	}
 }

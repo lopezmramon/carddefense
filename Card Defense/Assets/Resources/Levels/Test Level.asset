@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Test Level
   theme: 5
+  sprite: {fileID: 21300000, guid: a4da4e29e748cf84a8b6a0da04d7b42a, type: 3}
   mapData:
     tiles:
     - x: 0
@@ -172,57 +173,142 @@ MonoBehaviour:
   - enemies:
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 1
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 2
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 3
       specialAbility: 8
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
   - enemies:
     - enemyType: 5
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 5
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 5
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 5
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
   - enemies:
     - enemyType: 4
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 4
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 4
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 4
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
   - enemies:
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
     - enemyType: 0
       specialAbility: 0
-      livesCost: 0
+      waveIndex: 0
+      totalWaveEnemies: 0
+      transform: {fileID: 0}
+      maxHealth: 0
+      currentHealth: 0
+      speed: 0
   lives: 50
   startingTowerBuildingResource: 500

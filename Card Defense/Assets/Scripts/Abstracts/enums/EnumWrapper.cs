@@ -10,6 +10,11 @@ public class ElementSpriteCollection : GenericEnumCollection<Sprite, Element> { 
 public class ElementTowerCollection : GenericEnumCollection<TowerController, Element> { }
 [Serializable]
 public class ProjectileCollection : GenericEnumCollection<ProjectileController, Element> { }
+[Serializable]
+public class EnemyCollection : GenericEnumCollection<Transform, EnemyType> { }
+[Serializable]
+public class ViewCollection : GenericEnumCollection<GameObject, View> { }
+
 public class EnumWrapper 
 {
 	

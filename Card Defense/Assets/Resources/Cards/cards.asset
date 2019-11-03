@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: cards
   m_EditorClassIdentifier: 
   cards:
-  - name: Fire
+  - index: 0
+    name: Fire
     cardType: 0
     element: 0
     description: This card is on fire
@@ -32,7 +33,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Ice
+  - index: 1
+    name: Ice
     cardType: 0
     element: 4
     description: This card is on Ice forreal
@@ -51,7 +53,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Water
+  - index: 2
+    name: Water
     cardType: 0
     element: 1
     description: Watery AF
@@ -70,7 +73,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Earth
+  - index: 3
+    name: Earth
     cardType: 0
     element: 2
     description: Mud fired
@@ -89,7 +93,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Wind
+  - index: 4
+    name: Wind
     cardType: 0
     element: 3
     description: Blows you away with power
@@ -108,7 +113,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Lightning
+  - index: 5
+    name: Lightning
     cardType: 0
     element: 5
     description: ZAP!
@@ -127,7 +133,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: QuickFire 1
+  - index: 6
+    name: QuickFire 1
     cardType: 1
     element: 6
     description: Increases fire rate by 30% for 3 seconds
@@ -146,7 +153,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: QuickFire 2
+  - index: 7
+    name: QuickFire 2
     cardType: 1
     element: 6
     description: Increases fire rate by 60% for 3 seconds
@@ -165,7 +173,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Range 1
+  - index: 8
+    name: Range 1
     cardType: 1
     element: 6
     description: Increases tower's range by 30% for 3 seconds
@@ -184,7 +193,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Range 2
+  - index: 9
+    name: Range 2
     cardType: 1
     element: 6
     description: Increases tower's range by 30% for 3 seconds
@@ -203,7 +213,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Damage 1
+  - index: 10
+    name: Damage 1
     cardType: 1
     element: 6
     description: Increases tower's damage by 30% for 3 seconds
@@ -222,7 +233,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Damage 2
+  - index: 11
+    name: Damage 2
     cardType: 1
     element: 6
     description: Increases tower's damage by 60% for 3 seconds
@@ -241,7 +253,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: AOE 1
+  - index: 12
+    name: AOE 1
     cardType: 1
     element: 6
     description: Increases tower's projectile's AOE by 30% for 3 seconds
@@ -260,7 +273,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: AOE 2
+  - index: 13
+    name: AOE 2
     cardType: 1
     element: 6
     description: Increases tower's projectile's AOE by 60% for 3 seconds
@@ -279,7 +293,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Redraw 1
+  - index: 14
+    name: Redraw 1
     cardType: 2
     element: 6
     description: Choose 2 cards from your hand, discard them and then draw 2 new cards
@@ -298,7 +313,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Redraw 2
+  - index: 15
+    name: Redraw 2
     cardType: 2
     element: 6
     description: Choose 4 cards from your hand, discard them and then draw 4 new cards
@@ -317,7 +333,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Sell 1
+  - index: 16
+    name: Sell 1
     cardType: 2
     element: 6
     description: Sell Any amount of cards for 25 each
@@ -336,7 +353,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Sell 2
+  - index: 17
+    name: Sell 2
     cardType: 2
     element: 6
     description: Sell Any amount of cards for 50 each
@@ -355,7 +373,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: RedrawHand 1
+  - index: 18
+    name: RedrawHand 1
     cardType: 2
     element: 6
     description: Redraw your whole hand
@@ -374,7 +393,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: RedrawHand 2
+  - index: 19
+    name: RedrawHand 2
     cardType: 2
     element: 6
     description: Redraw your whole hand
@@ -393,7 +413,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Redraw Random Cards 1
+  - index: 20
+    name: Redraw Random Cards 1
     cardType: 2
     element: 6
     description: Discards 2 random cards from your hand and then draws 2 new cards
@@ -412,7 +433,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Redraw Random Cards 2
+  - index: 21
+    name: Redraw Random Cards 2
     cardType: 2
     element: 6
     description: Discards 4 random cards from your hand and then draws 4 new cards
@@ -431,7 +453,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Extra Life 1
+  - index: 22
+    name: Extra Life 1
     cardType: 3
     element: 6
     description: Gives the player 1 extra life
@@ -450,7 +473,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Extra Life 2
+  - index: 23
+    name: Extra Life 2
     cardType: 3
     element: 6
     description: Gives the player 3 extra lives
@@ -469,7 +493,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: ResourceChange 1
+  - index: 24
+    name: ResourceChange 1
     cardType: 3
     element: 6
     description: Instantly get 50 mana
@@ -488,7 +513,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: ResourceChange 2
+  - index: 25
+    name: ResourceChange 2
     cardType: 3
     element: 6
     description: Instantly get 100 mana
@@ -507,7 +533,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: ObtainedResource Increase 1
+  - index: 26
+    name: ObtainedResource Increase 1
     cardType: 3
     element: 6
     description: All resources obtained in the next 10 seconds are duplicated
@@ -526,7 +553,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Slow All Enemies
+  - index: 27
+    name: Slow All Enemies
     cardType: 3
     element: 4
     description: Slows all enemies movement speed by 30% for 3 seconds
@@ -545,7 +573,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Slow Enemies
+  - index: 28
+    name: Slow Enemies
     cardType: 3
     element: 4
     description: Slows 5 enemies movement speed by 60% for 3 seconds
@@ -564,7 +593,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Damage Enemies
+  - index: 29
+    name: Damage Enemies
     cardType: 3
     element: 6
     description: Deals immediate 10 damage to 5 enemies
@@ -583,7 +613,8 @@ MonoBehaviour:
     backgroundSprite: {fileID: 0}
     illustrationSprite: {fileID: 0}
     resourceSprite: {fileID: 0}
-  - name: Damage All Enemies
+  - index: 30
+    name: Damage All Enemies
     cardType: 3
     element: 6
     description: Deals immediate 3 damage to all enemies

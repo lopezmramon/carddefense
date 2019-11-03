@@ -25,7 +25,7 @@ public class ProjectileManager : MonoBehaviour
 
 	private void ShootProjectile(Projectile projectile, Transform projectileOrigin)
 	{
-		ProjectileController projectileShot = Instantiate(projectileCollection.GetAttribute(projectile.elements.Peek()));
+		ProjectileController projectileShot = Instantiate(projectileCollection[projectile.elements.Peek()]);
 		projectileShot.transform.position = projectileOrigin.position;
 		projectileShot.Initialize(projectile);
 	}

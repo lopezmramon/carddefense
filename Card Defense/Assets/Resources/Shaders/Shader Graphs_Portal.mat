@@ -25,14 +25,14 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask:
-        m_Texture: {fileID: 2800000, guid: 561773e31dae52842be5f77762f57bfe, type: 3}
+        m_Texture: {fileID: 2800000, guid: 737b0dc9d849e014d9754fc25927ba55, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Vector1_C831EF83: 0.6
-    - _Density: 3.29
+    - _Density: -4.5
     - _DissolveAmount: 2
-    - _Speed: 0.3
-    - _Twirl: 23.1
+    - _Speed: -0.1
+    - _Twirl: 2.42
     m_Colors:
-    - _Color: {r: 2.1398351, g: 0.36852717, b: 2.3181548, a: 0}
+    - _Color: {r: 1.9042312, g: 5.381523, b: 15.068264, a: 0}

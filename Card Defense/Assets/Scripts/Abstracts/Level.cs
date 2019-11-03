@@ -5,6 +5,7 @@ public class Level : ScriptableObject
 {
 	public string levelName;
 	public Theme theme;
+	public Sprite sprite;
 	public MapData mapData;
 	public List<Wave> waves;
 	public int lives, startingTowerBuildingResource;
